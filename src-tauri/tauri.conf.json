@@ -14,7 +14,9 @@
       {
         "title": "Turtle WoW HD Patcher",
         "width": 800,
-        "height": 600
+        "height": 700,
+        "resizable": true,
+        "fullscreen": false
       }
     ],
     "security": {
@@ -30,6 +32,10 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "shortDescription": "Automated HD Patch installer for Turtle WoW",
+    "longDescription": "Download and install HD texture packs for Turtle WoW with automatic dependency resolution, quality presets, and progress tracking.",
+    "category": "Game",
+    "copyright": "MIT License"
   }
 }
