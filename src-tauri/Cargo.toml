@@ -1,7 +1,7 @@
 [package]
-name = "temp-tauri"
+name = "turtle-wow-hd-patcher"
 version = "0.1.0"
-description = "A Tauri App"
+description = "Automated HD Patch installer for Turtle WoW"
 authors = ["you"]
 edition = "2021"
 
@@ -11,7 +11,7 @@ edition = "2021"
 # The `_lib` suffix may seem redundant but it is necessary
 # to make the lib name unique and wouldn't conflict with the bin name.
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "temp_tauri_lib"
+name = "turtle_wow_hd_patcher_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
@@ -20,6 +20,13 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
+tauri-plugin-http = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+scraper = "0.25"
+regex = "1"
+url = "2"
+thiserror = "1"
+tokio = { version = "1", features = ["full"] }
+lazy_static = "1.4"
 

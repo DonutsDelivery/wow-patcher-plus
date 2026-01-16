@@ -5,6 +5,15 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "opener:default"
+    "opener:default",
+    {
+      "identifier": "http:default",
+      "allow": [
+        { "url": "https://forum.turtlecraft.gg/*" },
+        { "url": "https://forum.turtle-wow.org/*" },
+        { "url": "https://*.mediafire.com/*" },
+        { "url": "https://*.google.com/*" }
+      ]
+    }
   ]
 }
