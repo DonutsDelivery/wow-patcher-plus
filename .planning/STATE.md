@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** One-click patch installation and repair — users never manually download, unpack, or place MPQ files.
-**Current focus:** Phase 3 — Installation Engine (IN PROGRESS)
+**Current focus:** Phase 3 — Installation Engine (COMPLETE)
 
 ## Current Position
 
 Phase: 3 of 4 (Installation Engine)
-Plan: 2/3 complete
-Status: In progress
-Last activity: 2026-01-16 — Completed 3-02-PLAN.md (Copy and verify)
+Plan: 3/3 complete
+Status: Phase complete
+Last activity: 2026-01-16 — Completed 3-03-PLAN.md (Batch installation and Tauri commands)
 
-Progress: ████████░░ 80%
+Progress: █████████░ 90%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 4 min
-- Total execution time: 32 min
+- Total execution time: 36 min
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: ████████░░ 80%
 |-------|-------|-------|----------|
 | 1-foundation | 2/2 | 10 min | 5 min |
 | 2-download-engine | 4/4 | 16 min | 4 min |
-| 3-installation-engine | 2/3 | 6 min | 3 min |
+| 3-installation-engine | 3/3 | 10 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 2-02 (3 min), 2-03 (3 min), 2-04 (4 min), 3-01 (2 min), 3-02 (4 min)
+- Last 5 plans: 2-03 (3 min), 2-04 (4 min), 3-01 (2 min), 3-02 (4 min), 3-03 (4 min)
 - Trend: Consistent velocity, fast execution
 
 ## Accumulated Context
@@ -67,6 +67,8 @@ Recent decisions affecting current work:
 - 64KB buffer for chunked MPQ copy (COPY_BUFFER_SIZE) (from 3-02)
 - 100ms throttle for install progress events (matches download pattern) (from 3-02)
 - Size-based verification for installed patches (from 3-02)
+- FilePath.into_path() for dialog file path conversion (from 3-03)
+- InstallManager registered via setup() with app data downloads directory (from 3-03)
 
 ### Pending Todos
 
@@ -78,17 +80,17 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T21:48:43Z
-Stopped at: Completed 3-02-PLAN.md
+Last session: 2026-01-16T21:54:52Z
+Stopped at: Completed 3-03-PLAN.md
 Resume file: None
 
 ## Next Steps
 
-Phase 3 (Installation Engine) in progress. Next:
-1. Execute 3-03-PLAN.md (Batch installation and Tauri commands)
+Phase 3 (Installation Engine) complete. Ready for Phase 4:
+1. Plan Phase 4: UI Integration
 
-Installation engine provides:
+Installation engine complete with full Tauri command API:
 - WowDetector for folder validation (exe + Data check)
 - Settings persistence via tauri-plugin-store
-- install_mpq for copying MPQ files with progress events
-- verify_patch/verify_all for installation verification
+- InstallManager coordinating all operations
+- Tauri commands: select_wow_folder, get_wow_path, auto_detect_wow, install_patches, verify_patches, repair_patches, load_saved_wow_path
