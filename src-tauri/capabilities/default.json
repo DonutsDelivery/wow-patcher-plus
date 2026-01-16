@@ -11,8 +11,11 @@
       "allow": [
         { "url": "https://forum.turtlecraft.gg/*" },
         { "url": "https://forum.turtle-wow.org/*" },
-        { "url": "https://*.mediafire.com/*" },
-        { "url": "https://*.google.com/*" }
+        { "url": "https://drive.google.com/*" },
+        { "url": "https://*.googleusercontent.com/*" },
+        { "url": "https://www.mediafire.com/*" },
+        { "url": "https://mediafire.com/*" },
+        { "url": "https://download*.mediafire.com/*" }
       ]
     }
   ]

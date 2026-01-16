@@ -3,13 +3,17 @@ mod models;
 mod download;
 
 use std::collections::HashSet;
-use models::{PatchModule, PatchId};
+use std::path::PathBuf;
+use tauri::{ipc::Channel, State};
+
+use models::{PatchModule, PatchId, DownloadProvider as ProviderType};
 use parser::{
     forum::{fetch_forum_post_with_fallback, ForumParser, FORUM_URL},
     links::extract_download_links,
     modules::parse_modules,
     dependencies::{validate_module_selection, auto_select_dependencies},
 };
+use download::{DownloadManager, progress::DownloadEvent};
 
 #[tauri::command]
 async fn fetch_patches() -> Result<Vec<PatchModule>, String> {
@@ -99,16 +103,73 @@ fn get_forum_url() -> String {
     FORUM_URL.to_string()
 }
 
+/// Start a download for a patch module
+///
+/// Spawns an async download task that reports progress via the Channel.
+/// Returns the download_id immediately for tracking.
+#[tauri::command]
+async fn start_download(
+    manager: State<'_, DownloadManager>,
+    share_url: String,
+    provider: String,
+    dest_dir: String,
+    on_progress: Channel<DownloadEvent>,
+) -> Result<String, String> {
+    let download_id = uuid::Uuid::new_v4().to_string();
+
+    let provider_type = match provider.to_lowercase().as_str() {
+        "googledrive" | "google_drive" | "gdrive" => ProviderType::GoogleDrive,
+        "mediafire" => ProviderType::Mediafire,
+        _ => ProviderType::Unknown,
+    };
+
+    let dest_path = PathBuf::from(dest_dir);
+
+    // Clone values for spawned task
+    let manager_clone = manager.inner().clone();
+    let download_id_clone = download_id.clone();
+
+    tauri::async_runtime::spawn(async move {
+        let result = manager_clone
+            .download(
+                share_url,
+                provider_type,
+                dest_path,
+                download_id_clone.clone(),
+                on_progress.clone(),
+            )
+            .await;
+
+        if let Err(e) = result {
+            let _ = on_progress.send(DownloadEvent::Failed {
+                download_id: download_id_clone,
+                error: e.to_string(),
+            });
+        }
+    });
+
+    Ok(download_id)
+}
+
+/// Get current active download count
+#[tauri::command]
+fn get_active_downloads(manager: State<'_, DownloadManager>) -> usize {
+    manager.active_downloads()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_http::init())
+        .manage(DownloadManager::new())
         .invoke_handler(tauri::generate_handler![
             fetch_patches,
             validate_selection,
             auto_select_deps,
             get_forum_url,
+            start_download,
+            get_active_downloads,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
