@@ -6,6 +6,8 @@
 pub mod gdrive;
 pub mod mediafire;
 
+pub use mediafire::MediafireProvider;
+
 use async_trait::async_trait;
 use crate::download::DownloadError;
 
