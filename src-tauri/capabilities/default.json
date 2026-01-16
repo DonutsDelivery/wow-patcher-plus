@@ -6,6 +6,8 @@
   "permissions": [
     "core:default",
     "opener:default",
+    "dialog:default",
+    "store:default",
     {
       "identifier": "http:default",
       "allow": [

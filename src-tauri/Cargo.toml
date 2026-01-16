@@ -33,4 +33,5 @@ futures-util = "0.3"
 uuid = { version = "1", features = ["v4"] }
 async-trait = "0.1"
 reqwest = { version = "0.12", features = ["stream"] }
-
+tauri-plugin-dialog = "2"
+tauri-plugin-store = "2"

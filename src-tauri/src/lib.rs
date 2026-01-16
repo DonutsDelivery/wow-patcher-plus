@@ -1,6 +1,7 @@
 mod parser;
 mod models;
 mod download;
+mod install;
 
 use std::collections::HashSet;
 use std::path::PathBuf;
@@ -162,6 +163,8 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_http::init())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_store::Builder::default().build())
         .manage(DownloadManager::new())
         .invoke_handler(tauri::generate_handler![
             fetch_patches,
