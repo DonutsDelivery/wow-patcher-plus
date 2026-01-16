@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-16)
 ## Current Position
 
 Phase: 3 of 4 (Installation Engine)
-Plan: 1/3 complete
+Plan: 2/3 complete
 Status: In progress
-Last activity: 2026-01-16 — Completed 3-01-PLAN.md (Installation foundation)
+Last activity: 2026-01-16 — Completed 3-02-PLAN.md (Copy and verify)
 
-Progress: ███████░░░ 70%
+Progress: ████████░░ 80%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 4 min
-- Total execution time: 28 min
+- Total execution time: 32 min
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: ███████░░░ 70%
 |-------|-------|-------|----------|
 | 1-foundation | 2/2 | 10 min | 5 min |
 | 2-download-engine | 4/4 | 16 min | 4 min |
-| 3-installation-engine | 1/3 | 2 min | 2 min |
+| 3-installation-engine | 2/3 | 6 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 2-01 (6 min), 2-02 (3 min), 2-03 (3 min), 2-04 (4 min), 3-01 (2 min)
+- Last 5 plans: 2-02 (3 min), 2-03 (3 min), 2-04 (4 min), 3-01 (2 min), 3-02 (4 min)
 - Trend: Consistent velocity, fast execution
 
 ## Accumulated Context
@@ -64,6 +64,9 @@ Recent decisions affecting current work:
 - WoW validation: check for WoW.exe, WoWFoV.exe, or turtle-wow.exe PLUS Data directory (from 3-01)
 - Settings stored in settings.json via tauri-plugin-store (from 3-01)
 - Store plugin uses Builder::default().build() pattern (from 3-01)
+- 64KB buffer for chunked MPQ copy (COPY_BUFFER_SIZE) (from 3-02)
+- 100ms throttle for install progress events (matches download pattern) (from 3-02)
+- Size-based verification for installed patches (from 3-02)
 
 ### Pending Todos
 
@@ -75,17 +78,17 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T21:43:00Z
-Stopped at: Completed 3-01-PLAN.md
+Last session: 2026-01-16T21:48:43Z
+Stopped at: Completed 3-02-PLAN.md
 Resume file: None
 
 ## Next Steps
 
 Phase 3 (Installation Engine) in progress. Next:
-1. Execute 3-02-PLAN.md (Tauri commands for folder selection)
-2. Execute 3-03-PLAN.md (MPQ copy operations)
+1. Execute 3-03-PLAN.md (Batch installation and Tauri commands)
 
-Installation foundation provides:
+Installation engine provides:
 - WowDetector for folder validation (exe + Data check)
 - Settings persistence via tauri-plugin-store
-- Dialog plugin registered for folder selection UI
+- install_mpq for copying MPQ files with progress events
+- verify_patch/verify_all for installation verification
