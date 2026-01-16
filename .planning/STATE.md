@@ -5,34 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** One-click patch installation and repair — users never manually download, unpack, or place MPQ files.
-**Current focus:** Phase 2 — Download Engine (plan 01/04 complete)
+**Current focus:** Phase 2 — Download Engine (plan 03/04 complete)
 
 ## Current Position
 
 Phase: 2 of 4 (Download Engine)
-Plan: 1/4 complete
+Plan: 3/4 complete
 Status: In progress
-Last activity: 2026-01-16 — Completed 2-01-PLAN.md (Download infrastructure)
+Last activity: 2026-01-16 — Completed 2-03-PLAN.md (Mediafire provider)
 
-Progress: ███░░░░░░░ 30%
+Progress: █████░░░░░ 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 5 min
-- Total execution time: 16 min
+- Total plans completed: 5
+- Average duration: 4 min
+- Total execution time: 22 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1-foundation | 2/2 | 10 min | 5 min |
-| 2-download-engine | 1/4 | 6 min | 6 min |
+| 2-download-engine | 3/4 | 12 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 1-01 (6 min), 1-02 (4 min), 2-01 (6 min)
-- Trend: Consistent velocity
+- Last 5 plans: 1-01 (6 min), 1-02 (4 min), 2-01 (6 min), 2-02 (3 min), 2-03 (3 min)
+- Trend: Improving velocity
 
 ## Accumulated Context
 
@@ -54,6 +54,9 @@ Recent decisions affecting current work:
 - 100ms throttle for progress events to prevent UI flooding (from 2-01)
 - Use bytes_stream() + StreamExt for memory-efficient downloads (from 2-01)
 - DownloadProvider trait for URL resolution abstraction (from 2-01)
+- Use regex for Google Drive file ID extraction (from 2-02)
+- Use regex for Mediafire download URL extraction with numbered subdomains (from 2-03)
+- 1.5s delay before dkey URL fetch to avoid rate limiting (from 2-03)
 
 ### Pending Todos
 
@@ -65,13 +68,11 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T19:55:00Z
-Stopped at: Completed 2-01-PLAN.md
+Last session: 2026-01-16T19:55:25Z
+Stopped at: Completed 2-03-PLAN.md
 Resume file: None
 
 ## Next Steps
 
 Continue Phase 2:
-1. Execute 2-02-PLAN.md (Google Drive provider)
-2. Execute 2-03-PLAN.md (Mediafire provider)
-3. Execute 2-04-PLAN.md (Download commands)
+1. Execute 2-04-PLAN.md (Download commands)
