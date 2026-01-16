@@ -6,6 +6,7 @@
 //! - Provider abstraction for different download hosts (Google Drive, Mediafire)
 
 pub mod engine;
+pub mod manager;
 pub mod progress;
 pub mod providers;
 pub mod resume;
@@ -17,6 +18,7 @@ pub use engine::download_file;
 pub use progress::{DownloadEvent, ProgressTracker};
 pub use providers::{DirectDownloadInfo, DownloadProvider};
 pub use resume::download_with_resume;
+pub use manager::DownloadManager;
 
 /// Errors that can occur during download operations
 #[derive(Debug, Error)]
