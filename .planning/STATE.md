@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** One-click patch installation and repair — users never manually download, unpack, or place MPQ files.
-**Current focus:** Phase 3 — Installation Engine (COMPLETE)
+**Current focus:** Phase 4 — GUI Configuration (In Progress)
 
 ## Current Position
 
-Phase: 3 of 4 (Installation Engine)
-Plan: 3/3 complete
-Status: Phase complete
-Last activity: 2026-01-16 — Completed 3-03-PLAN.md (Batch installation and Tauri commands)
+Phase: 4 of 4 (GUI Configuration)
+Plan: 1/4 complete
+Status: In progress
+Last activity: 2026-01-16 — Completed 4-01-PLAN.md (Tailwind + shadcn/ui Foundation)
 
-Progress: █████████░ 90%
+Progress: █████████▓ 92%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: 4 min
-- Total execution time: 36 min
+- Total execution time: 40 min
 
 **By Phase:**
 
@@ -30,9 +30,10 @@ Progress: █████████░ 90%
 | 1-foundation | 2/2 | 10 min | 5 min |
 | 2-download-engine | 4/4 | 16 min | 4 min |
 | 3-installation-engine | 3/3 | 10 min | 3 min |
+| 4-gui-configuration | 1/4 | 4 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 2-03 (3 min), 2-04 (4 min), 3-01 (2 min), 3-02 (4 min), 3-03 (4 min)
+- Last 5 plans: 2-04 (4 min), 3-01 (2 min), 3-02 (4 min), 3-03 (4 min), 4-01 (4 min)
 - Trend: Consistent velocity, fast execution
 
 ## Accumulated Context
@@ -69,6 +70,11 @@ Recent decisions affecting current work:
 - Size-based verification for installed patches (from 3-02)
 - FilePath.into_path() for dialog file path conversion (from 3-03)
 - InstallManager registered via setup() with app data downloads directory (from 3-03)
+- Use Tailwind CSS v4 with @tailwindcss/vite plugin (from 4-01)
+- Use tw-animate-css (replaced tailwindcss-animate in March 2025) (from 4-01)
+- Use OKLCH color space for CSS variables (from 4-01)
+- Force dark mode on app load via classList.add('dark') (from 4-01)
+- New York style for shadcn/ui with neutral base color (from 4-01)
 
 ### Pending Todos
 
@@ -80,17 +86,18 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T21:54:52Z
-Stopped at: Completed 3-03-PLAN.md
+Last session: 2026-01-16T22:24:38Z
+Stopped at: Completed 4-01-PLAN.md
 Resume file: None
 
 ## Next Steps
 
-Phase 3 (Installation Engine) complete. Ready for Phase 4:
-1. Plan Phase 4: UI Integration
+Phase 4 (GUI Configuration) in progress. Next:
+1. Execute 4-02-PLAN.md: Application shell layout
 
-Installation engine complete with full Tauri command API:
-- WowDetector for folder validation (exe + Data check)
-- Settings persistence via tauri-plugin-store
-- InstallManager coordinating all operations
-- Tauri commands: select_wow_folder, get_wow_path, auto_detect_wow, install_patches, verify_patches, repair_patches, load_saved_wow_path
+UI foundation complete:
+- Tailwind CSS v4 with Vite plugin
+- shadcn/ui components: Button, Card, Checkbox, Progress, ScrollArea, Select, Switch
+- Dark theme with OKLCH CSS variables
+- Path alias @/* configured
+- cn() utility for class merging
