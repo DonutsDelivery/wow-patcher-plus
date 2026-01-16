@@ -12,7 +12,7 @@ Build a cross-platform desktop application that automates the HD Patch: Reforged
 
 - [x] **Phase 1: Foundation & Forum Parser** - Parse forum post to discover patches and download links
 - [x] **Phase 2: Download Engine** - Download files from external hosts with progress tracking
-- [ ] **Phase 3: Installation Engine** - Extract archives and install MPQ files to WoW
+- [x] **Phase 3: Installation Engine** - Copy MPQ files to WoW DATA folder with verification
 - [ ] **Phase 4: GUI & Configuration** - Desktop interface with presets and module toggles
 
 ## Phase Details
@@ -49,18 +49,20 @@ Plans:
 - [x] 2-04: Resume, parallel manager, Tauri commands (Wave 3, depends on 2-02, 2-03)
 
 ### Phase 3: Installation Engine
-**Goal**: Extract downloaded archives and install MPQ files to WoW DATA folder with verification
+**Goal**: Copy downloaded MPQ files to WoW DATA folder with verification and repair
 **Depends on**: Phase 2
 **Requirements**: INST-01, INST-02, INST-03, INST-04
+**Note**: Research found HD Patch distributes raw MPQ files, not archives. No extraction needed.
 **Success Criteria** (what must be TRUE):
-  1. Downloaded archives are extracted automatically
-  2. MPQ files are placed in correct WoW DATA folder
+  1. Downloaded MPQ files are copied to WoW DATA folder
+  2. User can select WoW folder via native dialog
   3. User can repair/re-apply patches on demand
   4. Installation integrity is verified after install
-**Plans**: TBD
 
 Plans:
-- [ ] 03-01: Installation engine implementation
+- [x] 3-01: Tauri plugins + WoW detection + Settings (Wave 1)
+- [x] 3-02: MPQ copier + Verification logic (Wave 2, depends on 3-01)
+- [x] 3-03: Repair + Tauri commands (Wave 3, depends on 3-01, 3-02)
 
 ### Phase 4: GUI & Configuration
 **Goal**: Desktop application with quality presets, individual module toggles, and cross-platform builds
@@ -88,7 +90,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 |-------|----------------|--------|-----------|
 | 1. Foundation & Forum Parser | 2/2 | Complete | 2026-01-16 |
 | 2. Download Engine | 4/4 | Complete | 2026-01-16 |
-| 3. Installation Engine | 0/TBD | Not started | - |
+| 3. Installation Engine | 3/3 | Complete | 2026-01-16 |
 | 4. GUI & Configuration | 0/TBD | Not started | - |
 
 ---

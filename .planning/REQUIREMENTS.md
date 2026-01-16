@@ -23,10 +23,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Installation
 
-- [ ] **INST-01**: App extracts downloaded archives
-- [ ] **INST-02**: App places MPQ files in correct WoW DATA folder
-- [ ] **INST-03**: User can repair/re-apply patches on demand
-- [ ] **INST-04**: App verifies installation integrity after install
+- [x] **INST-01**: App copies downloaded MPQ files (HD Patch uses raw files, not archives)
+- [x] **INST-02**: App places MPQ files in correct WoW DATA folder
+- [x] **INST-03**: User can repair/re-apply patches on demand
+- [x] **INST-04**: App verifies installation integrity after install
 
 ### Configuration
 
@@ -76,10 +76,10 @@ Which phases cover which requirements. Updated by create-roadmap.
 | DL-03 | Phase 2 | Complete |
 | DL-04 | Phase 2 | Complete |
 | DL-05 | Phase 2 | Complete |
-| INST-01 | Phase 3 | Pending |
-| INST-02 | Phase 3 | Pending |
-| INST-03 | Phase 3 | Pending |
-| INST-04 | Phase 3 | Pending |
+| INST-01 | Phase 3 | Complete |
+| INST-02 | Phase 3 | Complete |
+| INST-03 | Phase 3 | Complete |
+| INST-04 | Phase 3 | Complete |
 | CFG-01 | Phase 4 | Pending |
 | CFG-02 | Phase 4 | Pending |
 | CFG-03 | Phase 4 | Pending |
