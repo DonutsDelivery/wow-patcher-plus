@@ -41,10 +41,12 @@ Plans:
   3. User sees download progress (speed, percentage)
   4. Interrupted downloads can resume (where supported by host)
   5. Multiple downloads can run in parallel
-**Plans**: TBD
 
 Plans:
-- [ ] 02-01: Download engine implementation
+- [ ] 2-01: Core download infrastructure (Wave 1) - Provider trait, streaming engine, progress types
+- [ ] 2-02: Google Drive provider (Wave 2, depends on 2-01) - URL resolution, virus scan handling
+- [ ] 2-03: Mediafire provider (Wave 2, depends on 2-01) - URL resolution, dynamic subdomain handling
+- [ ] 2-04: Resume, parallel manager, Tauri commands (Wave 3, depends on 2-02, 2-03)
 
 ### Phase 3: Installation Engine
 **Goal**: Extract downloaded archives and install MPQ files to WoW DATA folder with verification
@@ -84,8 +86,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Forum Parser | 2/2 | ✓ Complete | 2026-01-16 |
-| 2. Download Engine | 0/TBD | Not started | - |
+| 1. Foundation & Forum Parser | 2/2 | Complete | 2026-01-16 |
+| 2. Download Engine | 0/4 | Not started | - |
 | 3. Installation Engine | 0/TBD | Not started | - |
 | 4. GUI & Configuration | 0/TBD | Not started | - |
 
