@@ -5,33 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** One-click patch installation and repair — users never manually download, unpack, or place MPQ files.
-**Current focus:** Phase 1 — Foundation & Forum Parser
+**Current focus:** Phase 1 complete — Foundation & Forum Parser
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & Forum Parser)
-Plan: 1-01 complete, 1-02 ready
-Status: In progress
-Last activity: 2026-01-16 — Completed 1-01-PLAN.md (Project scaffolding)
+Phase: 1 of 4 (Foundation & Forum Parser) - COMPLETE
+Plan: 2/2 complete
+Status: Phase complete
+Last activity: 2026-01-16 — Completed 1-02-PLAN.md (Scraping infrastructure)
 
-Progress: █░░░░░░░░░ 10%
+Progress: ██░░░░░░░░ 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 6 min
-- Total execution time: 6 min
+- Total plans completed: 2
+- Average duration: 5 min
+- Total execution time: 10 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1-foundation | 1/2 | 6 min | 6 min |
+| 1-foundation | 2/2 | 10 min | 5 min |
 
 **Recent Trend:**
-- Last 5 plans: 1-01 (6 min)
-- Trend: First plan complete
+- Last 5 plans: 1-01 (6 min), 1-02 (4 min)
+- Trend: Improving velocity
 
 ## Accumulated Context
 
@@ -48,6 +48,8 @@ Recent decisions affecting current work:
 - Dependencies: B+D+E together, L->A, U->A+G, O->S
 - Package name: turtle-wow-hd-patcher (from 1-01)
 - HTTP permissions scoped to forum and download host domains only (from 1-01)
+- Use div.postbody div.content selector for phpBB post extraction (from 1-02)
+- Implement URL fallback from turtlecraft.gg to turtle-wow.org (from 1-02)
 
 ### Pending Todos
 
@@ -59,15 +61,15 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T19:24:36Z
-Stopped at: Completed 1-01-PLAN.md
+Last session: 2026-01-16T19:29:53Z
+Stopped at: Completed 1-02-PLAN.md
 Resume file: None
 
 ## Next Steps
 
-Continue Phase 1 execution:
-1. Execute Plan 1-02: Parser implementation
-   - Implement ForumParser with CSS selectors
-   - Implement download link extraction
-   - Implement dependency validation
-   - Create Tauri commands for frontend
+Phase 1 complete. Continue to Phase 2:
+1. Execute Phase 2: Download System
+   - Implement download manager for Mediafire/Google Drive
+   - Handle large file downloads with progress
+   - Implement archive extraction (7z, rar)
+   - Place MPQ files in correct WoW DATA folder
