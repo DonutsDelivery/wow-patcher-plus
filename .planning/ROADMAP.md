@@ -11,7 +11,7 @@ Build a cross-platform desktop application that automates the HD Patch: Reforged
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
 - [x] **Phase 1: Foundation & Forum Parser** - Parse forum post to discover patches and download links
-- [ ] **Phase 2: Download Engine** - Download files from external hosts with progress tracking
+- [x] **Phase 2: Download Engine** - Download files from external hosts with progress tracking
 - [ ] **Phase 3: Installation Engine** - Extract archives and install MPQ files to WoW
 - [ ] **Phase 4: GUI & Configuration** - Desktop interface with presets and module toggles
 
@@ -43,10 +43,10 @@ Plans:
   5. Multiple downloads can run in parallel
 
 Plans:
-- [ ] 2-01: Core download infrastructure (Wave 1) - Provider trait, streaming engine, progress types
-- [ ] 2-02: Google Drive provider (Wave 2, depends on 2-01) - URL resolution, virus scan handling
-- [ ] 2-03: Mediafire provider (Wave 2, depends on 2-01) - URL resolution, dynamic subdomain handling
-- [ ] 2-04: Resume, parallel manager, Tauri commands (Wave 3, depends on 2-02, 2-03)
+- [x] 2-01: Core download infrastructure (Wave 1) - Provider trait, streaming engine, progress types
+- [x] 2-02: Google Drive provider (Wave 2, depends on 2-01) - URL resolution, virus scan handling
+- [x] 2-03: Mediafire provider (Wave 2, depends on 2-01) - URL resolution, dynamic subdomain handling
+- [x] 2-04: Resume, parallel manager, Tauri commands (Wave 3, depends on 2-02, 2-03)
 
 ### Phase 3: Installation Engine
 **Goal**: Extract downloaded archives and install MPQ files to WoW DATA folder with verification
@@ -87,7 +87,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Forum Parser | 2/2 | Complete | 2026-01-16 |
-| 2. Download Engine | 0/4 | Not started | - |
+| 2. Download Engine | 4/4 | Complete | 2026-01-16 |
 | 3. Installation Engine | 0/TBD | Not started | - |
 | 4. GUI & Configuration | 0/TBD | Not started | - |
 

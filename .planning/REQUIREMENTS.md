@@ -15,11 +15,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Downloading
 
-- [ ] **DL-01**: User can download patch files from Google Drive
-- [ ] **DL-02**: User can download patch files from Mediafire
-- [ ] **DL-03**: User sees progress indicators during download
-- [ ] **DL-04**: Downloads can resume if interrupted (where host supports)
-- [ ] **DL-05**: Multiple patches can download in parallel
+- [x] **DL-01**: User can download patch files from Google Drive
+- [x] **DL-02**: User can download patch files from Mediafire
+- [x] **DL-03**: User sees progress indicators during download
+- [x] **DL-04**: Downloads can resume if interrupted (where host supports)
+- [x] **DL-05**: Multiple patches can download in parallel
 
 ### Installation
 
@@ -71,11 +71,11 @@ Which phases cover which requirements. Updated by create-roadmap.
 | PARSE-01 | Phase 1 | Complete |
 | PARSE-02 | Phase 1 | Complete |
 | PARSE-03 | Phase 1 | Complete |
-| DL-01 | Phase 2 | Pending |
-| DL-02 | Phase 2 | Pending |
-| DL-03 | Phase 2 | Pending |
-| DL-04 | Phase 2 | Pending |
-| DL-05 | Phase 2 | Pending |
+| DL-01 | Phase 2 | Complete |
+| DL-02 | Phase 2 | Complete |
+| DL-03 | Phase 2 | Complete |
+| DL-04 | Phase 2 | Complete |
+| DL-05 | Phase 2 | Complete |
 | INST-01 | Phase 3 | Pending |
 | INST-02 | Phase 3 | Pending |
 | INST-03 | Phase 3 | Pending |
