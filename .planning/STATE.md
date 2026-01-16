@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** One-click patch installation and repair — users never manually download, unpack, or place MPQ files.
-**Current focus:** Phase 4 — GUI Configuration (In Progress)
+**Current focus:** Phase 4 — GUI Configuration (Complete)
 
 ## Current Position
 
 Phase: 4 of 4 (GUI Configuration)
-Plan: 3/4 complete
-Status: In progress
-Last activity: 2026-01-16 — Completed 4-03-PLAN.md (Download/Install Progress and App Integration)
+Plan: 4/4 complete
+Status: Complete
+Last activity: 2026-01-16 — Completed 4-04-PLAN.md (CI/CD and Release Configuration)
 
-Progress: ██████████ 97%
+Progress: ██████████ 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: 4 min
-- Total execution time: 45 min
+- Total execution time: 46 min
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: ██████████ 97%
 | 1-foundation | 2/2 | 10 min | 5 min |
 | 2-download-engine | 4/4 | 16 min | 4 min |
 | 3-installation-engine | 3/3 | 10 min | 3 min |
-| 4-gui-configuration | 3/4 | 9 min | 3 min |
+| 4-gui-configuration | 4/4 | 10 min | 2.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 3-02 (4 min), 3-03 (4 min), 4-01 (4 min), 4-02 (2 min), 4-03 (3 min)
+- Last 5 plans: 3-03 (4 min), 4-01 (4 min), 4-02 (2 min), 4-03 (3 min), 4-04 (1 min)
 - Trend: Consistent velocity, fast execution
 
 ## Accumulated Context
@@ -81,6 +81,9 @@ Recent decisions affecting current work:
 - Use Channel.onmessage callback for streaming updates from Rust (from 4-03)
 - Map<string, State> for concurrent download/install tracking (from 4-03)
 - App state machine: configure -> downloading -> installing -> complete (from 4-03)
+- Draft releases (releaseDraft: true) for review before publishing (from 4-04)
+- 4-way build matrix: Windows, Ubuntu 22.04, macOS ARM64, macOS x86_64 (from 4-04)
+- Use tauri-apps/tauri-action@v0 for building and releasing (from 4-04)
 
 ### Pending Todos
 
@@ -92,17 +95,18 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T22:33:04Z
-Stopped at: Completed 4-03-PLAN.md
+Last session: 2026-01-16T22:42:00Z
+Stopped at: Completed 4-04-PLAN.md
 Resume file: None
 
-## Next Steps
+## Project Complete
 
-Phase 4 (GUI Configuration) in progress. Next:
-1. Execute 4-04-PLAN.md: Final polish and testing
+All 4 phases completed successfully:
+1. Foundation - Tauri project setup, forum parsing, URL extraction
+2. Download Engine - Google Drive, Mediafire, concurrent downloads, resume
+3. Installation Engine - WoW detection, settings, MPQ installation
+4. GUI Configuration - UI components, progress tracking, CI/CD pipeline
 
-Complete functional UI assembled:
-- Download progress with Channel streaming
-- Install progress with Channel streaming
-- Full workflow state machine in App.tsx
-- All components integrated and building
+Ready for release:
+- Tag with version (e.g., `git tag v0.1.0`) to trigger GitHub Actions release
+- Review draft release before publishing
