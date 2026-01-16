@@ -26,10 +26,10 @@ Build a cross-platform desktop application that automates the HD Patch: Reforged
   2. App knows all available patch modules (A-U)
   3. App can list download links for each module
   4. App understands dependency relationships between modules
-**Plans**: TBD
 
 Plans:
-- [ ] 01-01: Project scaffolding and forum parser implementation
+- [ ] 1-01: Project scaffolding and Tauri setup (Wave 1)
+- [ ] 1-02: Parser implementation with models (Wave 2, depends on 1-01)
 
 ### Phase 2: Download Engine
 **Goal**: Download patch files from external hosts (Google Drive, Mediafire) with progress tracking and parallel downloads
@@ -80,11 +80,11 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Forum Parser | 0/TBD | Not started | - |
+| 1. Foundation & Forum Parser | 0/2 | Planned | - |
 | 2. Download Engine | 0/TBD | Not started | - |
 | 3. Installation Engine | 0/TBD | Not started | - |
 | 4. GUI & Configuration | 0/TBD | Not started | - |
