@@ -139,6 +139,14 @@ impl ProgressTracker {
     pub fn downloaded_bytes(&self) -> u64 {
         self.downloaded_bytes
     }
+
+    /// Set downloaded bytes (used for resume functionality)
+    ///
+    /// This allows initializing the tracker with bytes already downloaded
+    /// from a previous partial download.
+    pub fn set_downloaded(&mut self, bytes: u64) {
+        self.downloaded_bytes = bytes;
+    }
 }
 
 #[cfg(test)]

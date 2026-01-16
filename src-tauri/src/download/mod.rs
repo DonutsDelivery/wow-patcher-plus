@@ -8,6 +8,7 @@
 pub mod engine;
 pub mod progress;
 pub mod providers;
+pub mod resume;
 
 use thiserror::Error;
 
@@ -15,6 +16,7 @@ use thiserror::Error;
 pub use engine::download_file;
 pub use progress::{DownloadEvent, ProgressTracker};
 pub use providers::{DirectDownloadInfo, DownloadProvider};
+pub use resume::download_with_resume;
 
 /// Errors that can occur during download operations
 #[derive(Debug, Error)]
