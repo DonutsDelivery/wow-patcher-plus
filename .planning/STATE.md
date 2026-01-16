@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** One-click patch installation and repair — users never manually download, unpack, or place MPQ files.
-**Current focus:** Phase 2 — Download Engine (COMPLETE)
+**Current focus:** Phase 3 — Installation Engine (IN PROGRESS)
 
 ## Current Position
 
-Phase: 2 of 4 (Download Engine)
-Plan: 4/4 complete
-Status: Phase complete
-Last activity: 2026-01-16 — Completed 2-04-PLAN.md (Download commands)
+Phase: 3 of 4 (Installation Engine)
+Plan: 1/3 complete
+Status: In progress
+Last activity: 2026-01-16 — Completed 3-01-PLAN.md (Installation foundation)
 
-Progress: ██████░░░░ 60%
+Progress: ███████░░░ 70%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 4 min
-- Total execution time: 26 min
+- Total execution time: 28 min
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: ██████░░░░ 60%
 |-------|-------|-------|----------|
 | 1-foundation | 2/2 | 10 min | 5 min |
 | 2-download-engine | 4/4 | 16 min | 4 min |
+| 3-installation-engine | 1/3 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 1-02 (4 min), 2-01 (6 min), 2-02 (3 min), 2-03 (3 min), 2-04 (4 min)
-- Trend: Consistent velocity
+- Last 5 plans: 2-01 (6 min), 2-02 (3 min), 2-03 (3 min), 2-04 (4 min), 3-01 (2 min)
+- Trend: Consistent velocity, fast execution
 
 ## Accumulated Context
 
@@ -60,6 +61,9 @@ Recent decisions affecting current work:
 - MAX_CONCURRENT_DOWNLOADS = 3 with Semaphore limiting (from 2-04)
 - Spawn async task for non-blocking download initiation (from 2-04)
 - HTTP Range header pattern: bytes={start}- for resume (from 2-04)
+- WoW validation: check for WoW.exe, WoWFoV.exe, or turtle-wow.exe PLUS Data directory (from 3-01)
+- Settings stored in settings.json via tauri-plugin-store (from 3-01)
+- Store plugin uses Builder::default().build() pattern (from 3-01)
 
 ### Pending Todos
 
@@ -71,17 +75,17 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T21:08:00Z
-Stopped at: Completed 2-04-PLAN.md (Phase 2 complete)
+Last session: 2026-01-16T21:43:00Z
+Stopped at: Completed 3-01-PLAN.md
 Resume file: None
 
 ## Next Steps
 
-Phase 2 (Download Engine) is complete. Ready for Phase 3:
-1. Execute 3-01-PLAN.md (UI Integration - if exists)
+Phase 3 (Installation Engine) in progress. Next:
+1. Execute 3-02-PLAN.md (Tauri commands for folder selection)
+2. Execute 3-03-PLAN.md (MPQ copy operations)
 
-Download engine provides:
-- Resume-capable downloads with Range headers
-- Parallel download manager with 3 concurrent limit
-- Tauri commands: start_download, get_active_downloads
-- Progress events via Channel to frontend
+Installation foundation provides:
+- WowDetector for folder validation (exe + Data check)
+- Settings persistence via tauri-plugin-store
+- Dialog plugin registered for folder selection UI
