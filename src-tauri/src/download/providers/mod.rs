@@ -6,6 +6,7 @@
 pub mod gdrive;
 pub mod mediafire;
 
+pub use gdrive::GoogleDriveProvider;
 pub use mediafire::MediafireProvider;
 
 use async_trait::async_trait;
