@@ -35,3 +35,6 @@ async-trait = "0.1"
 reqwest = { version = "0.12", features = ["stream"] }
 tauri-plugin-dialog = "2"
 tauri-plugin-store = "2"
+
+[dev-dependencies]
+tempfile = "3"
