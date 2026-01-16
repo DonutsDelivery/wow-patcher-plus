@@ -5,34 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** One-click patch installation and repair — users never manually download, unpack, or place MPQ files.
-**Current focus:** Phase 2 — Download Engine (plan 03/04 complete)
+**Current focus:** Phase 2 — Download Engine (COMPLETE)
 
 ## Current Position
 
 Phase: 2 of 4 (Download Engine)
-Plan: 3/4 complete
-Status: In progress
-Last activity: 2026-01-16 — Completed 2-03-PLAN.md (Mediafire provider)
+Plan: 4/4 complete
+Status: Phase complete
+Last activity: 2026-01-16 — Completed 2-04-PLAN.md (Download commands)
 
-Progress: █████░░░░░ 50%
+Progress: ██████░░░░ 60%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
+- Total plans completed: 6
 - Average duration: 4 min
-- Total execution time: 22 min
+- Total execution time: 26 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1-foundation | 2/2 | 10 min | 5 min |
-| 2-download-engine | 3/4 | 12 min | 4 min |
+| 2-download-engine | 4/4 | 16 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 1-01 (6 min), 1-02 (4 min), 2-01 (6 min), 2-02 (3 min), 2-03 (3 min)
-- Trend: Improving velocity
+- Last 5 plans: 1-02 (4 min), 2-01 (6 min), 2-02 (3 min), 2-03 (3 min), 2-04 (4 min)
+- Trend: Consistent velocity
 
 ## Accumulated Context
 
@@ -57,6 +57,9 @@ Recent decisions affecting current work:
 - Use regex for Google Drive file ID extraction (from 2-02)
 - Use regex for Mediafire download URL extraction with numbered subdomains (from 2-03)
 - 1.5s delay before dkey URL fetch to avoid rate limiting (from 2-03)
+- MAX_CONCURRENT_DOWNLOADS = 3 with Semaphore limiting (from 2-04)
+- Spawn async task for non-blocking download initiation (from 2-04)
+- HTTP Range header pattern: bytes={start}- for resume (from 2-04)
 
 ### Pending Todos
 
@@ -68,11 +71,17 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T19:55:25Z
-Stopped at: Completed 2-03-PLAN.md
+Last session: 2026-01-16T21:08:00Z
+Stopped at: Completed 2-04-PLAN.md (Phase 2 complete)
 Resume file: None
 
 ## Next Steps
 
-Continue Phase 2:
-1. Execute 2-04-PLAN.md (Download commands)
+Phase 2 (Download Engine) is complete. Ready for Phase 3:
+1. Execute 3-01-PLAN.md (UI Integration - if exists)
+
+Download engine provides:
+- Resume-capable downloads with Range headers
+- Parallel download manager with 3 concurrent limit
+- Tauri commands: start_download, get_active_downloads
+- Progress events via Channel to frontend
