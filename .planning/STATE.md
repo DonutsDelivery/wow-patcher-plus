@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-16)
 ## Current Position
 
 Phase: 4 of 4 (GUI Configuration)
-Plan: 2/4 complete
+Plan: 3/4 complete
 Status: In progress
-Last activity: 2026-01-16 — Completed 4-02-PLAN.md (Core UI Components)
+Last activity: 2026-01-16 — Completed 4-03-PLAN.md (Download/Install Progress and App Integration)
 
-Progress: █████████▓ 94%
+Progress: ██████████ 97%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: 4 min
-- Total execution time: 42 min
+- Total execution time: 45 min
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: █████████▓ 94%
 | 1-foundation | 2/2 | 10 min | 5 min |
 | 2-download-engine | 4/4 | 16 min | 4 min |
 | 3-installation-engine | 3/3 | 10 min | 3 min |
-| 4-gui-configuration | 2/4 | 6 min | 3 min |
+| 4-gui-configuration | 3/4 | 9 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 3-01 (2 min), 3-02 (4 min), 3-03 (4 min), 4-01 (4 min), 4-02 (2 min)
+- Last 5 plans: 3-02 (4 min), 3-03 (4 min), 4-01 (4 min), 4-02 (2 min), 4-03 (3 min)
 - Trend: Consistent velocity, fast execution
 
 ## Accumulated Context
@@ -78,6 +78,9 @@ Recent decisions affecting current work:
 - Presets: low (I,M), medium (A,C,G,I,M,V), high (+B,D,E,S), ultra (+U) (from 4-02)
 - usePatches returns Set<string> for O(1) selection lookups (from 4-02)
 - useWowPath tries saved path first, then auto-detect on mount (from 4-02)
+- Use Channel.onmessage callback for streaming updates from Rust (from 4-03)
+- Map<string, State> for concurrent download/install tracking (from 4-03)
+- App state machine: configure -> downloading -> installing -> complete (from 4-03)
 
 ### Pending Todos
 
@@ -89,20 +92,17 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T22:28:52Z
-Stopped at: Completed 4-02-PLAN.md
+Last session: 2026-01-16T22:33:04Z
+Stopped at: Completed 4-03-PLAN.md
 Resume file: None
 
 ## Next Steps
 
 Phase 4 (GUI Configuration) in progress. Next:
-1. Execute 4-03-PLAN.md: Application shell and layout integration
+1. Execute 4-04-PLAN.md: Final polish and testing
 
-Core UI components complete:
-- Quality presets (Low/Medium/High/Ultra)
-- Typed Tauri wrappers (src/lib/tauri.ts)
-- usePatches hook (fetch, select, apply preset)
-- useWowPath hook (load, auto-detect, pick folder)
-- PresetSelector dropdown component
-- ModuleList scrollable checkbox list
-- FolderPicker with status indicators
+Complete functional UI assembled:
+- Download progress with Channel streaming
+- Install progress with Channel streaming
+- Full workflow state machine in App.tsx
+- All components integrated and building
