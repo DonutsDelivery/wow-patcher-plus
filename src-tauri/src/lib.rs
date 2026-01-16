@@ -1,5 +1,6 @@
 mod parser;
 mod models;
+mod download;
 
 use std::collections::HashSet;
 use models::{PatchModule, PatchId};
