@@ -9,9 +9,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Forum Parsing
 
-- [ ] **PARSE-01**: App can parse Turtle WoW forum post to discover available patches
-- [ ] **PARSE-02**: App can extract download links from forum post
-- [ ] **PARSE-03**: App understands module dependencies (e.g., Patch-L requires Patch-A)
+- [x] **PARSE-01**: App can parse Turtle WoW forum post to discover available patches
+- [x] **PARSE-02**: App can extract download links from forum post
+- [x] **PARSE-03**: App understands module dependencies (e.g., Patch-L requires Patch-A)
 
 ### Downloading
 
@@ -68,9 +68,9 @@ Which phases cover which requirements. Updated by create-roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PARSE-01 | Phase 1 | Pending |
-| PARSE-02 | Phase 1 | Pending |
-| PARSE-03 | Phase 1 | Pending |
+| PARSE-01 | Phase 1 | Complete |
+| PARSE-02 | Phase 1 | Complete |
+| PARSE-03 | Phase 1 | Complete |
 | DL-01 | Phase 2 | Pending |
 | DL-02 | Phase 2 | Pending |
 | DL-03 | Phase 2 | Pending |

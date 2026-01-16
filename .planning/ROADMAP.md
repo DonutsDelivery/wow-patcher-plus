@@ -10,7 +10,7 @@ Build a cross-platform desktop application that automates the HD Patch: Reforged
 - Integer phases (1, 2, 3): Planned milestone work
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 
-- [ ] **Phase 1: Foundation & Forum Parser** - Parse forum post to discover patches and download links
+- [x] **Phase 1: Foundation & Forum Parser** - Parse forum post to discover patches and download links
 - [ ] **Phase 2: Download Engine** - Download files from external hosts with progress tracking
 - [ ] **Phase 3: Installation Engine** - Extract archives and install MPQ files to WoW
 - [ ] **Phase 4: GUI & Configuration** - Desktop interface with presets and module toggles
@@ -28,8 +28,8 @@ Build a cross-platform desktop application that automates the HD Patch: Reforged
   4. App understands dependency relationships between modules
 
 Plans:
-- [ ] 1-01: Project scaffolding and Tauri setup (Wave 1)
-- [ ] 1-02: Parser implementation with models (Wave 2, depends on 1-01)
+- [x] 1-01: Project scaffolding and Tauri setup (Wave 1)
+- [x] 1-02: Parser implementation with models (Wave 2, depends on 1-01)
 
 ### Phase 2: Download Engine
 **Goal**: Download patch files from external hosts (Google Drive, Mediafire) with progress tracking and parallel downloads
@@ -84,7 +84,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Forum Parser | 0/2 | Planned | - |
+| 1. Foundation & Forum Parser | 2/2 | ✓ Complete | 2026-01-16 |
 | 2. Download Engine | 0/TBD | Not started | - |
 | 3. Installation Engine | 0/TBD | Not started | - |
 | 4. GUI & Configuration | 0/TBD | Not started | - |

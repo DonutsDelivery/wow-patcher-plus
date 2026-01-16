@@ -67,9 +67,6 @@ Resume file: None
 
 ## Next Steps
 
-Phase 1 complete. Continue to Phase 2:
-1. Execute Phase 2: Download System
-   - Implement download manager for Mediafire/Google Drive
-   - Handle large file downloads with progress
-   - Implement archive extraction (7z, rar)
-   - Place MPQ files in correct WoW DATA folder
+Phase 1 complete. Ready for Phase 2:
+1. Run `/gsd:plan-phase 2` to create download engine plans
+2. Then `/gsd:execute-phase 2` to implement
