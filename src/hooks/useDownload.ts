@@ -17,7 +17,7 @@ export interface DownloadState {
 export function useDownload() {
   const [downloads, setDownloads] = useState<Map<string, DownloadState>>(new Map());
 
-  const startModuleDownload = useCallback(async (module: PatchModule, variantIndex?: number) => {
+  const startModuleDownload = useCallback(async (module: PatchModule, variantIndex?: number): Promise<void> => {
     // Find appropriate link - use variant index if specified for patches with variants
     const hasVariants = module.variants && module.variants.length > 1;
     const linkIndex = hasVariants && variantIndex !== undefined ? variantIndex : 0;
@@ -26,62 +26,67 @@ export function useDownload() {
 
     const destDir = await join(await appDataDir(), 'downloads');
 
-    const onProgress = new Channel<DownloadEvent>();
+    // Create a promise that resolves when download completes or fails
+    return new Promise<void>((resolve, reject) => {
+      const onProgress = new Channel<DownloadEvent>();
 
-    onProgress.onmessage = (msg) => {
-      setDownloads(prev => {
-        const next = new Map(prev);
-        const current = next.get(msg.data.downloadId) || {
-          downloadId: msg.data.downloadId,
-          fileName: '',
-          totalBytes: 0,
-          downloadedBytes: 0,
-          speedBps: 0,
-          percent: 0,
-          status: 'pending' as const,
-        };
+      onProgress.onmessage = (msg) => {
+        setDownloads(prev => {
+          const next = new Map(prev);
+          const current = next.get(msg.data.downloadId) || {
+            downloadId: msg.data.downloadId,
+            fileName: '',
+            totalBytes: 0,
+            downloadedBytes: 0,
+            speedBps: 0,
+            percent: 0,
+            status: 'pending' as const,
+          };
 
-        switch (msg.event) {
-          case 'started':
-            next.set(msg.data.downloadId, {
-              ...current,
-              fileName: msg.data.fileName,
-              totalBytes: msg.data.totalBytes,
-              status: 'downloading',
-            });
-            break;
-          case 'progress':
-            next.set(msg.data.downloadId, {
-              ...current,
-              downloadedBytes: msg.data.downloadedBytes,
-              totalBytes: msg.data.totalBytes,
-              speedBps: msg.data.speedBps,
-              percent: msg.data.percent,
-              status: 'downloading',
-            });
-            break;
-          case 'completed':
-            next.set(msg.data.downloadId, {
-              ...current,
-              percent: 100,
-              status: 'completed',
-            });
-            break;
-          case 'failed':
-            next.set(msg.data.downloadId, {
-              ...current,
-              status: 'failed',
-              error: msg.data.error,
-            });
-            break;
-        }
-        return next;
-      });
-    };
+          switch (msg.event) {
+            case 'started':
+              next.set(msg.data.downloadId, {
+                ...current,
+                fileName: msg.data.fileName,
+                totalBytes: msg.data.totalBytes,
+                status: 'downloading',
+              });
+              break;
+            case 'progress':
+              next.set(msg.data.downloadId, {
+                ...current,
+                downloadedBytes: msg.data.downloadedBytes,
+                totalBytes: msg.data.totalBytes,
+                speedBps: msg.data.speedBps,
+                percent: msg.data.percent,
+                status: 'downloading',
+              });
+              break;
+            case 'completed':
+              next.set(msg.data.downloadId, {
+                ...current,
+                percent: 100,
+                status: 'completed',
+              });
+              resolve();
+              break;
+            case 'failed':
+              next.set(msg.data.downloadId, {
+                ...current,
+                status: 'failed',
+                error: msg.data.error,
+              });
+              reject(new Error(msg.data.error || 'Download failed'));
+              break;
+          }
+          return next;
+        });
+      };
 
-    const targetFilename = `Patch-${module.id.toUpperCase()}.mpq`;
-    const downloadId = await startDownload(link.url, link.provider, destDir, onProgress, targetFilename);
-    return downloadId;
+      const targetFilename = `Patch-${module.id.toUpperCase()}.mpq`;
+      startDownload(link.url, link.provider, destDir, onProgress, targetFilename)
+        .catch(reject);
+    });
   }, []);
 
   const downloadAll = useCallback(async (modules: PatchModule[], variantSelections?: Map<string, number>) => {
