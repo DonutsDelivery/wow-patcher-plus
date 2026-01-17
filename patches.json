@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "patches": {
+    "A": {
+      "name": "Player Characters & NPCs",
+      "description": "HD textures for player models and NPCs",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/yno9a9htkeimxgr/Patch-A.mpq/file"}
+      ],
+      "dependencies": []
+    },
+    "B": {
+      "name": "Buildings",
+      "description": "HD textures for buildings and structures",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/3f31m3oug3wocrq/Patch-B.mpq/file"}
+      ],
+      "dependencies": ["D", "E"]
+    },
+    "C": {
+      "name": "Creatures",
+      "description": "HD textures for creatures and mobs",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/00l85reelat91kv/Patch-C.mpq/file"}
+      ],
+      "dependencies": []
+    },
+    "D": {
+      "name": "Doodads",
+      "description": "HD textures for environmental objects",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/et71nipmrz8k554/Patch-D.mpq/file"}
+      ],
+      "dependencies": ["B", "E"]
+    },
+    "E": {
+      "name": "Environment",
+      "description": "HD textures for terrain and environment",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/33g9gjebqrmmj2a/Patch-E.mpq/file"}
+      ],
+      "dependencies": ["B", "D"]
+    },
+    "G": {
+      "name": "Gear & Weapons",
+      "description": "HD textures for armor and weapons",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/qu7ty0e75vk9roj/Patch-G.mpq/file"}
+      ],
+      "dependencies": []
+    },
+    "I": {
+      "name": "Interface",
+      "description": "HD interface elements",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/a0zywdwfy7kic4o/Patch-I.mpq/file"}
+      ],
+      "dependencies": []
+    },
+    "L": {
+      "name": "A Little Extra for Females",
+      "description": "Additional female model options",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/cpmb9pt5ifzcymp/Patch-L.mpq/file"},
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/yu2o1u66x0rgwoo/Patch-L.mpq/file"}
+      ],
+      "variants": ["Regular Version", "Less Thicc Version"],
+      "dependencies": ["A", "G"]
+    },
+    "M": {
+      "name": "Maps & Loading Screens",
+      "description": "HD maps and loading screen artwork",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/tbnbyg0lntd7utx/Patch-M.mpq/file"}
+      ],
+      "dependencies": []
+    },
+    "N": {
+      "name": "Darker Nights",
+      "description": "Enhanced night-time lighting",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/9zgbg74avr3051z/Patch-N.mpq/file"}
+      ],
+      "dependencies": []
+    },
+    "O": {
+      "name": "Raid Visuals Mod",
+      "description": "Enhanced raid visual effects",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/l0fpmrrdthng8wz/Patch-O.mpq/file"}
+      ],
+      "dependencies": []
+    },
+    "S": {
+      "name": "Sounds & Music",
+      "description": "Enhanced audio and music",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/ma81gpkvvndbnlb/Patch-S.mpq/file"}
+      ],
+      "dependencies": []
+    },
+    "U": {
+      "name": "Ultra HD Character Textures & Gear",
+      "description": "Maximum quality character textures",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/4t3xslqq4b669bg/Patch-U.mpq/file"},
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/310agawowiov2ps/PATCH-U.mpq/file"}
+      ],
+      "variants": ["Ultra HD (unstable)", "Performance"],
+      "dependencies": ["A", "G"]
+    },
+    "V": {
+      "name": "Visual Effects for Spells",
+      "description": "Enhanced spell visual effects",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/3cxkzx9wh93b8zl/Patch-V.mpq/file"}
+      ],
+      "dependencies": []
+    }
+  }
+}

@@ -66,8 +66,8 @@ impl ProgressTracker {
             downloaded_bytes: 0,
             start_time: now,
             // Set last_report_time in the past to allow immediate first report
-            last_report_time: now - Duration::from_millis(200),
-            min_report_interval: Duration::from_millis(100),
+            last_report_time: now - Duration::from_millis(300),
+            min_report_interval: Duration::from_millis(250),
         }
     }
 

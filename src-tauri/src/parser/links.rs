@@ -31,6 +31,28 @@ lazy_static! {
     static ref MEDIAFIRE_VIEW: Regex = Regex::new(
         r#"https://(?:www\.)?mediafire\.com/view/([a-z0-9]+)/([^/\s"<>]+)"#
     ).unwrap();
+
+    // Variant pattern - matches text like "(Regular Version by Author)" before a URL
+    // Allows newlines and whitespace between ) and URL
+    static ref VARIANT_PATTERN: Regex = Regex::new(
+        r"\(([^)]+(?:Version|version)[^)]*)\)[:\s\n\r]*$"
+    ).unwrap();
+}
+
+/// Find variant info for a URL by looking at the text before it
+fn find_variant_for_url(content: &str, url: &str) -> Option<String> {
+    // Find the position of the URL in the content
+    if let Some(url_pos) = content.find(url) {
+        // Look at the 200 chars before the URL for variant info
+        let start = url_pos.saturating_sub(200);
+        let context = &content[start..url_pos];
+
+        // Look for pattern like "(Regular Version by Author)"
+        if let Some(cap) = VARIANT_PATTERN.captures(context) {
+            return Some(cap[1].trim().to_string());
+        }
+    }
+    None
 }
 
 /// Extract all download links from content (HTML or plain text)
@@ -39,55 +61,73 @@ pub fn extract_download_links(content: &str) -> Vec<DownloadLink> {
 
     // Extract Google Drive file links
     for cap in GDRIVE_FILE.captures_iter(content) {
+        let url = cap[0].to_string();
+        let variant = find_variant_for_url(content, &url);
         links.push(DownloadLink {
             provider: DownloadProvider::GoogleDrive,
-            url: cap[0].to_string(),
+            url,
             file_name: None,
+            variant,
         });
     }
 
     // Extract Google Drive open links
     for cap in GDRIVE_OPEN.captures_iter(content) {
+        let url = cap[0].to_string();
+        let variant = find_variant_for_url(content, &url);
         links.push(DownloadLink {
             provider: DownloadProvider::GoogleDrive,
-            url: cap[0].to_string(),
+            url,
             file_name: None,
+            variant,
         });
     }
 
     // Extract Google Drive uc links
     for cap in GDRIVE_UC.captures_iter(content) {
+        let url = cap[0].to_string();
+        let variant = find_variant_for_url(content, &url);
         links.push(DownloadLink {
             provider: DownloadProvider::GoogleDrive,
-            url: cap[0].to_string(),
+            url,
             file_name: None,
+            variant,
         });
     }
 
     // Extract Mediafire file links (with filename)
     for cap in MEDIAFIRE_FILE.captures_iter(content) {
+        let url = cap[0].to_string();
+        let variant = find_variant_for_url(content, &url);
         links.push(DownloadLink {
             provider: DownloadProvider::Mediafire,
-            url: cap[0].to_string(),
+            url,
             file_name: Some(cap[2].to_string()),
+            variant,
         });
     }
 
     // Extract Mediafire view links (with filename)
     for cap in MEDIAFIRE_VIEW.captures_iter(content) {
+        let url = cap[0].to_string();
+        let variant = find_variant_for_url(content, &url);
         links.push(DownloadLink {
             provider: DownloadProvider::Mediafire,
-            url: cap[0].to_string(),
+            url,
             file_name: Some(cap[2].to_string()),
+            variant,
         });
     }
 
     // Extract Mediafire folder links
     for cap in MEDIAFIRE_FOLDER.captures_iter(content) {
+        let url = cap[0].to_string();
+        let variant = find_variant_for_url(content, &url);
         links.push(DownloadLink {
             provider: DownloadProvider::Mediafire,
-            url: cap[0].to_string(),
+            url,
             file_name: None,
+            variant,
         });
     }
 

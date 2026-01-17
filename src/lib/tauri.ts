@@ -1,12 +1,20 @@
 import { invoke, Channel } from '@tauri-apps/api/core';
 
 // Types matching Rust models
+export interface DownloadLink {
+  provider: string;
+  url: string;
+  file_name?: string;
+  variant?: string;
+}
+
 export interface PatchModule {
   id: string;
   name: string;
   description: string;
-  links: { provider: string; url: string }[];
+  links: DownloadLink[];
   dependencies: string[];
+  variants?: string[];
 }
 
 // Download events (matches DownloadEvent in progress.rs with serde camelCase)
@@ -97,4 +105,47 @@ export async function repairPatches(
   onEvent: Channel<InstallEvent>
 ): Promise<RepairResult[]> {
   return invoke('repair_patches', { patchIds, onEvent });
+}
+
+// Requirements check
+export interface RequirementsStatus {
+  vanilla_helpers: boolean;
+  dxvk: boolean;
+}
+
+export async function checkRequirements(): Promise<RequirementsStatus | null> {
+  return invoke('check_requirements');
+}
+
+export async function installVanillaHelpers(): Promise<void> {
+  return invoke('install_vanilla_helpers');
+}
+
+export async function installDxvk(version?: string): Promise<void> {
+  return invoke('install_dxvk', { version });
+}
+
+// Update check types
+export interface UpdateInfo {
+  currentVersion: string;
+  latestVersion: string;
+  updateAvailable: boolean;
+  downloadUrl?: string;
+  releaseNotes?: string;
+}
+
+export interface PatchFreshness {
+  patchId: string;
+  remoteModified?: string;
+  localModified?: string;
+  needsUpdate: boolean;
+}
+
+// Update commands
+export async function checkForUpdates(): Promise<UpdateInfo> {
+  return invoke('check_for_updates');
+}
+
+export async function checkPatchFreshness(patchId: string, downloadUrl: string): Promise<PatchFreshness> {
+  return invoke('check_patch_freshness', { patchId, downloadUrl });
 }

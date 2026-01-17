@@ -13,6 +13,8 @@ pub struct PatchModule {
     pub dependencies: Vec<PatchId>,
     pub file_size: Option<String>,
     pub last_updated: Option<String>,
+    /// Named variants for patches with multiple download options (e.g., Patch L)
+    pub variants: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]

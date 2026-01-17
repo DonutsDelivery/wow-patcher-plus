@@ -4,15 +4,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { PresetSelector } from '@/components/PresetSelector';
 import { ModuleList } from '@/components/ModuleList';
 import { FolderPicker } from '@/components/FolderPicker';
+import { RequirementsPanel } from '@/components/RequirementsPanel';
 import { DownloadProgress } from '@/components/DownloadProgress';
 import { InstallProgress } from '@/components/InstallProgress';
+import { UpdateBanner } from '@/components/UpdateBanner';
 import { usePatches } from '@/hooks/usePatches';
 import { useWowPath } from '@/hooks/useWowPath';
 import { useDownload } from '@/hooks/useDownload';
 import { useInstall } from '@/hooks/useInstall';
 import { verifyPatches, repairPatches, InstallEvent } from '@/lib/tauri';
 import { Channel } from '@tauri-apps/api/core';
-import { Loader2 } from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 import './App.css';
 
 type AppState = 'configure' | 'downloading' | 'installing' | 'complete';
@@ -26,6 +28,8 @@ function App() {
   const [verifyResults, setVerifyResults] = useState<Map<string, string>>(new Map());
   const [repairing, setRepairing] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [variantSelections, setVariantSelections] = useState<Map<string, number>>(new Map());
 
   const selectedPatches = patches.filter(p => selectedModules.has(p.id));
   const canStart = selectedModules.size > 0 && wowPath !== null;
@@ -106,11 +110,30 @@ function App() {
     }
   };
 
+  const handleUpdateAll = async () => {
+    if (!canStart) return;
+    setUpdating(true);
+    setAppState('downloading');
+
+    try {
+      // Re-download all selected patches
+      await downloadAll(selectedPatches, variantSelections);
+
+      // Re-install them
+      setAppState('installing');
+      await install(Array.from(selectedModules));
+
+      setAppState('complete');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   const handleStart = async () => {
     if (!canStart) return;
 
     setAppState('downloading');
-    await downloadAll(selectedPatches);
+    await downloadAll(selectedPatches, variantSelections);
 
     setAppState('installing');
     await install(Array.from(selectedModules));
@@ -144,10 +167,12 @@ function App() {
   return (
     <div className="min-h-screen bg-background text-foreground p-6">
       <div className="max-w-2xl mx-auto space-y-6">
+        <UpdateBanner />
+
         <div className="text-center">
-          <h1 className="text-3xl font-bold">Turtle WoW HD Patcher</h1>
+          <h1 className="text-3xl font-bold">WoW HD Patcher</h1>
           <p className="text-muted-foreground mt-2">
-            Automated HD Patch installation for Turtle WoW
+            Automated HD Patch installation
           </p>
         </div>
 
@@ -160,8 +185,17 @@ function App() {
           </CardHeader>
           <CardContent className="space-y-6">
             <FolderPicker path={wowPath} loading={pathLoading} onPick={pickFolder} />
+            <RequirementsPanel wowPath={wowPath} />
             <PresetSelector onSelect={applyPreset} />
-            <ModuleList modules={patches} selected={selectedModules} onToggle={toggleModule} />
+            <ModuleList
+              modules={patches}
+              selected={selectedModules}
+              onToggle={toggleModule}
+              variantSelections={variantSelections}
+              onVariantChange={(patchId, index) => {
+                setVariantSelections(prev => new Map(prev).set(patchId, index));
+              }}
+            />
           </CardContent>
         </Card>
 
@@ -198,15 +232,19 @@ function App() {
           <Card>
             <CardHeader>
               <CardTitle className="text-green-500">Installation Complete!</CardTitle>
-              <CardDescription>You can now launch Turtle WoW.</CardDescription>
+              <CardDescription>You can now launch WoW.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex gap-4 justify-center">
-                <Button variant="outline" onClick={handleVerify} disabled={verifying || repairing}>
-                  {verifying ? 'Verifying...' : 'Verify Installation'}
+              <div className="flex flex-wrap gap-3 justify-center">
+                <Button variant="outline" onClick={handleVerify} disabled={verifying || repairing || updating}>
+                  {verifying ? 'Verifying...' : 'Verify'}
                 </Button>
-                <Button variant="outline" onClick={handleRepair} disabled={repairing || verifying}>
-                  {repairing ? 'Repairing...' : 'Repair Installation'}
+                <Button variant="outline" onClick={handleRepair} disabled={repairing || verifying || updating}>
+                  {repairing ? 'Repairing...' : 'Repair'}
+                </Button>
+                <Button variant="default" onClick={handleUpdateAll} disabled={updating || verifying || repairing}>
+                  <RefreshCw className={`h-4 w-4 mr-2 ${updating ? 'animate-spin' : ''}`} />
+                  {updating ? 'Updating...' : 'Update ALL'}
                 </Button>
               </div>
               {verifyResults.size > 0 && (

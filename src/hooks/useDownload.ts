@@ -17,9 +17,11 @@ export interface DownloadState {
 export function useDownload() {
   const [downloads, setDownloads] = useState<Map<string, DownloadState>>(new Map());
 
-  const startModuleDownload = useCallback(async (module: PatchModule) => {
-    // Find first available link
-    const link = module.links[0];
+  const startModuleDownload = useCallback(async (module: PatchModule, variantIndex?: number) => {
+    // Find appropriate link - use variant index if specified for patches with variants
+    const hasVariants = module.variants && module.variants.length > 1;
+    const linkIndex = hasVariants && variantIndex !== undefined ? variantIndex : 0;
+    const link = module.links[linkIndex] || module.links[0];
     if (!link) throw new Error(`No download link for module ${module.id}`);
 
     const destDir = await join(await appDataDir(), 'downloads');
@@ -82,9 +84,9 @@ export function useDownload() {
     return downloadId;
   }, []);
 
-  const downloadAll = useCallback(async (modules: PatchModule[]) => {
+  const downloadAll = useCallback(async (modules: PatchModule[], variantSelections?: Map<string, number>) => {
     const results = await Promise.allSettled(
-      modules.map(m => startModuleDownload(m))
+      modules.map(m => startModuleDownload(m, variantSelections?.get(m.id)))
     );
     return results;
   }, [startModuleDownload]);

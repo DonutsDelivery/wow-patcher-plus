@@ -14,6 +14,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::A),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::B,
@@ -23,6 +24,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::B),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::C,
@@ -32,6 +34,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::C),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::D,
@@ -41,6 +44,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::D),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::E,
@@ -50,6 +54,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::E),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::G,
@@ -59,6 +64,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::G),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::I,
@@ -68,6 +74,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::I),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::L,
@@ -77,6 +84,10 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::L),
             file_size: None,
             last_updated: None,
+            variants: Some(vec![
+                "Regular Version".into(),
+                "Less Thicc Version".into(),
+            ]),
         },
         PatchModule {
             id: PatchId::M,
@@ -86,6 +97,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::M),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::N,
@@ -95,6 +107,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::N),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::O,
@@ -104,6 +117,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::O),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::S,
@@ -113,6 +127,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::S),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::U,
@@ -122,6 +137,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::U),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
         PatchModule {
             id: PatchId::V,
@@ -131,6 +147,7 @@ pub fn get_all_modules() -> Vec<PatchModule> {
             dependencies: get_dependencies(PatchId::V),
             file_size: None,
             last_updated: None,
+            variants: None,
         },
     ]
 }
@@ -211,11 +228,13 @@ mod tests {
                 provider: DownloadProvider::Mediafire,
                 url: "https://mediafire.com/file/xyz/patch-a.7z".into(),
                 file_name: Some("patch-a.7z".into()),
+                variant: None,
             },
             DownloadLink {
                 provider: DownloadProvider::GoogleDrive,
                 url: "https://drive.google.com/file/d/abc/view".into(),
                 file_name: Some("Patch-G-v2.rar".into()),
+                variant: None,
             },
         ];
 

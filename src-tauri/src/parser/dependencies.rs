@@ -56,14 +56,15 @@ pub fn validate_module_selection(selected: &HashSet<PatchId>) -> Result<(), Vec<
 }
 
 /// Get the dependencies for a given patch
+/// Note: B, D, E are a GROUP (must install together) but don't have dependencies on each other
+/// They are handled as a group toggle in the UI, not as blocking dependencies
 pub fn get_dependencies(patch: PatchId) -> Vec<PatchId> {
     match patch {
-        PatchId::B => vec![PatchId::D, PatchId::E],
-        PatchId::D => vec![PatchId::B, PatchId::E],
-        PatchId::E => vec![PatchId::B, PatchId::D],
+        // L requires A (character base)
         PatchId::L => vec![PatchId::A],
+        // U requires A (characters) and G (gear)
         PatchId::U => vec![PatchId::A, PatchId::G],
-        PatchId::O => vec![PatchId::S],
+        // All other patches are independent (B, D, E are a group but handled separately)
         _ => vec![],
     }
 }

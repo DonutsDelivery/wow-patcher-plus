@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Turtle WoW HD Patcher",
+  "productName": "WoW HD Patcher",
   "version": "0.1.0",
-  "identifier": "com.turtlewow.hdpatcher",
+  "identifier": "com.wow.hdpatcher",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "Turtle WoW HD Patcher",
-        "width": 800,
-        "height": 700,
+        "title": "WoW HD Patcher",
+        "width": 850,
+        "height": 800,
+        "minWidth": 600,
+        "minHeight": 500,
         "resizable": true,
         "fullscreen": false
       }
@@ -33,8 +35,8 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "shortDescription": "Automated HD Patch installer for Turtle WoW",
-    "longDescription": "Download and install HD texture packs for Turtle WoW with automatic dependency resolution, quality presets, and progress tracking.",
+    "shortDescription": "Automated HD Patch installer for WoW",
+    "longDescription": "Download and install HD texture packs for WoW with automatic dependency resolution, quality presets, and progress tracking.",
     "category": "Game",
     "copyright": "MIT License"
   }
