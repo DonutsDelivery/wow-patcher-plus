@@ -14,6 +14,7 @@ Build a cross-platform desktop application that automates the HD Patch: Reforged
 - [x] **Phase 2: Download Engine** - Download files from external hosts with progress tracking
 - [x] **Phase 3: Installation Engine** - Copy MPQ files to WoW DATA folder with verification
 - [x] **Phase 4: GUI & Configuration** - Desktop interface with presets and module toggles
+- [ ] **Phase 5: Integration Fixes** - Fix cross-phase wiring issues found in audit
 
 ## Phase Details
 
@@ -83,10 +84,22 @@ Plans:
 - [x] 4-03: Progress components + main App workflow (Wave 3, depends on 4-02)
 - [x] 4-04: Cross-platform CI/CD + bundle config (Wave 4, depends on 4-03)
 
+### Phase 5: Integration Fixes
+**Goal**: Fix cross-phase wiring issues that will cause runtime failures
+**Depends on**: Phase 4
+**Gap Closure**: Closes gaps from v1-MILESTONE-AUDIT.md
+**Success Criteria** (what must be TRUE):
+  1. Frontend can access download URLs from parsed modules (type mismatch fixed)
+  2. Downloaded files match the naming convention expected by installer
+  3. User can trigger verify and repair from the UI
+
+Plans:
+- [ ] 5-01: Type mismatch + filename convention + repair UI (Wave 1)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 -> 2 -> 3 -> 4
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -94,6 +107,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 2. Download Engine | 4/4 | Complete | 2026-01-16 |
 | 3. Installation Engine | 3/3 | Complete | 2026-01-16 |
 | 4. GUI & Configuration | 4/4 | Complete | 2026-01-17 |
+| 5. Integration Fixes | 0/1 | Pending | — |
 
 ---
 *Created: 2026-01-16*
