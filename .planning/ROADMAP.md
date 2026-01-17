@@ -13,7 +13,7 @@ Build a cross-platform desktop application that automates the HD Patch: Reforged
 - [x] **Phase 1: Foundation & Forum Parser** - Parse forum post to discover patches and download links
 - [x] **Phase 2: Download Engine** - Download files from external hosts with progress tracking
 - [x] **Phase 3: Installation Engine** - Copy MPQ files to WoW DATA folder with verification
-- [ ] **Phase 4: GUI & Configuration** - Desktop interface with presets and module toggles
+- [x] **Phase 4: GUI & Configuration** - Desktop interface with presets and module toggles
 
 ## Phase Details
 
@@ -76,10 +76,12 @@ Plans:
   5. Desktop GUI shows download/install progress
   6. Native builds work on Windows, Linux, and macOS
   7. App uses dark theme
-**Plans**: TBD
 
 Plans:
-- [ ] 04-01: GUI implementation with Tauri
+- [x] 4-01: Tailwind/shadcn setup + dark theme (Wave 1)
+- [x] 4-02: PresetSelector, ModuleList, FolderPicker components (Wave 2, depends on 4-01)
+- [x] 4-03: Progress components + main App workflow (Wave 3, depends on 4-02)
+- [x] 4-04: Cross-platform CI/CD + bundle config (Wave 4, depends on 4-03)
 
 ## Progress
 
@@ -91,7 +93,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4
 | 1. Foundation & Forum Parser | 2/2 | Complete | 2026-01-16 |
 | 2. Download Engine | 4/4 | Complete | 2026-01-16 |
 | 3. Installation Engine | 3/3 | Complete | 2026-01-16 |
-| 4. GUI & Configuration | 0/TBD | Not started | - |
+| 4. GUI & Configuration | 4/4 | Complete | 2026-01-17 |
 
 ---
 *Created: 2026-01-16*

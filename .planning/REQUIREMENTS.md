@@ -30,18 +30,18 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Configuration
 
-- [ ] **CFG-01**: User can select from preset configurations (Low/Medium/High/Ultra)
-- [ ] **CFG-02**: User can toggle individual modules on/off
-- [ ] **CFG-03**: App auto-detects WoW folder if run from inside it
-- [ ] **CFG-04**: App remembers user's WoW installation path
+- [x] **CFG-01**: User can select from preset configurations (Low/Medium/High/Ultra)
+- [x] **CFG-02**: User can toggle individual modules on/off
+- [x] **CFG-03**: App auto-detects WoW folder if run from inside it
+- [x] **CFG-04**: App remembers user's WoW installation path
 
 ### User Interface
 
-- [ ] **UI-01**: Desktop GUI displays download and installation progress
-- [ ] **UI-02**: App builds as native executable for Windows
-- [ ] **UI-03**: App builds as native executable for Linux
-- [ ] **UI-04**: App builds as native executable for macOS
-- [ ] **UI-05**: App uses dark mode theme
+- [x] **UI-01**: Desktop GUI displays download and installation progress
+- [x] **UI-02**: App builds as native executable for Windows
+- [x] **UI-03**: App builds as native executable for Linux
+- [x] **UI-04**: App builds as native executable for macOS
+- [x] **UI-05**: App uses dark mode theme
 
 ## v2 Requirements
 
@@ -80,15 +80,15 @@ Which phases cover which requirements. Updated by create-roadmap.
 | INST-02 | Phase 3 | Complete |
 | INST-03 | Phase 3 | Complete |
 | INST-04 | Phase 3 | Complete |
-| CFG-01 | Phase 4 | Pending |
-| CFG-02 | Phase 4 | Pending |
-| CFG-03 | Phase 4 | Pending |
-| CFG-04 | Phase 4 | Pending |
-| UI-01 | Phase 4 | Pending |
-| UI-02 | Phase 4 | Pending |
-| UI-03 | Phase 4 | Pending |
-| UI-04 | Phase 4 | Pending |
-| UI-05 | Phase 4 | Pending |
+| CFG-01 | Phase 4 | Complete |
+| CFG-02 | Phase 4 | Complete |
+| CFG-03 | Phase 4 | Complete |
+| CFG-04 | Phase 4 | Complete |
+| UI-01 | Phase 4 | Complete |
+| UI-02 | Phase 4 | Complete |
+| UI-03 | Phase 4 | Complete |
+| UI-04 | Phase 4 | Complete |
+| UI-05 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 21 total
@@ -97,4 +97,4 @@ Which phases cover which requirements. Updated by create-roadmap.
 
 ---
 *Requirements defined: 2026-01-16*
-*Last updated: 2026-01-16 after roadmap creation*
+*Last updated: 2026-01-17 after Phase 4 completion*
