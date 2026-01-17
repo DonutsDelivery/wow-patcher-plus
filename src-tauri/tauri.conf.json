@@ -38,6 +38,22 @@
     "shortDescription": "Automated HD Patch installer for WoW",
     "longDescription": "Download and install HD texture packs for WoW with automatic dependency resolution, quality presets, and progress tracking.",
     "category": "Game",
-    "copyright": "MIT License"
+    "copyright": "MIT License",
+    "linux": {
+      "appimage": {
+        "bundleMediaFramework": true
+      },
+      "deb": {
+        "depends": []
+      },
+      "rpm": {
+        "depends": []
+      }
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
   }
 }

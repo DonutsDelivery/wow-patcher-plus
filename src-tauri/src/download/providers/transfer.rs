@@ -20,11 +20,15 @@ impl TransferProvider {
 #[async_trait]
 impl DownloadProvider for TransferProvider {
     async fn resolve_direct_url(&self, share_url: &str) -> Result<DirectDownloadInfo, DownloadError> {
+        log::info!("[Transfer] Share URL: {}", share_url);
         // Transfer.it URLs are typically direct or redirect to direct download
         // Follow redirects to get the final URL
+        log::info!("[Transfer] Sending HEAD request...");
         let response = self.client.head(share_url).send().await?;
+        log::info!("[Transfer] Response status: {}", response.status());
 
         let final_url = response.url().to_string();
+        log::info!("[Transfer] Final URL after redirects: {}", final_url);
         let content_length = response.content_length();
         let supports_range = response
             .headers()

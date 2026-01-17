@@ -95,6 +95,8 @@ impl MediafireProvider {
         &self,
         share_url: &str,
     ) -> Result<DirectDownloadInfo, DownloadError> {
+        log::info!("[MediaFire] Fetching share page: {}", share_url);
+
         // Step 1: Fetch the share page with browser-like headers
         let response = self
             .client
@@ -111,7 +113,10 @@ impl MediafireProvider {
             .await
             .map_err(DownloadError::RequestError)?;
 
+        log::info!("[MediaFire] Share page response status: {}", response.status());
+
         if !response.status().is_success() {
+            log::info!("[MediaFire] Share page fetch failed!");
             return Err(DownloadError::HttpError(response.status()));
         }
 
@@ -120,9 +125,13 @@ impl MediafireProvider {
             .await
             .map_err(DownloadError::RequestError)?;
 
+        log::info!("[MediaFire] Got HTML ({} bytes)", html.len());
+
         // Step 2: Try to find direct download URL
         if let Some(url) = Self::extract_download_url(&html) {
             let file_name = Self::extract_filename_from_page(&html);
+            log::info!("[MediaFire] Found direct URL: {}", url);
+            log::info!("[MediaFire] Extracted filename: {:?}", file_name);
             return Ok(DirectDownloadInfo {
                 url,
                 file_name,
@@ -130,6 +139,8 @@ impl MediafireProvider {
                 supports_range: true, // Mediafire generally supports Range
             });
         }
+
+        log::info!("[MediaFire] No direct URL found, trying dkey fallback...");
 
         // Step 3: If not found, try dkey URL and follow it
         if let Some(dkey_url) = Self::extract_dkey_url(&html) {

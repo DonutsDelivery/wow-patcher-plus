@@ -4,10 +4,13 @@ mod download;
 mod install;
 
 use std::collections::HashSet;
+use std::fs::File;
 use std::path::PathBuf;
 use std::sync::RwLock;
 use tauri::{ipc::Channel, Manager, State};
 use tauri_plugin_dialog::DialogExt;
+use log::LevelFilter;
+use simplelog::{CombinedLogger, Config, WriteLogger};
 
 use models::{PatchModule, PatchId, PatchGroup, DownloadLink, DownloadProvider as ProviderType};
 use parser::dependencies::{validate_module_selection, auto_select_dependencies};
@@ -333,16 +336,30 @@ async fn install_patches(
     patch_ids: Vec<String>,
     on_event: Channel<InstallEvent>,
 ) -> Result<Vec<String>, String> {
+    log::info!("[Install] install_patches called for: {:?}", patch_ids);
+    log::info!("[Install] WoW path: {:?}", manager.get_wow_path());
+    log::info!("[Install] Downloads path: {:?}", manager.get_downloads_folder());
+
     let ids: Vec<&str> = patch_ids.iter().map(|s| s.as_str()).collect();
     let results = manager.install_patches(&ids, on_event).await;
 
     let mut installed = Vec::new();
+    let mut errors = Vec::new();
     for (id, result) in patch_ids.iter().zip(results.iter()) {
-        if result.is_ok() {
-            installed.push(id.clone());
+        match result {
+            Ok(_) => installed.push(id.clone()),
+            Err(e) => {
+                log::error!("[Install] Failed to install {}: {:?}", id, e);
+                errors.push(format!("{}: {:?}", id, e));
+            }
         }
     }
 
+    if !errors.is_empty() {
+        log::error!("[Install] Installation errors: {:?}", errors);
+    }
+
+    log::info!("[Install] Successfully installed: {:?}", installed);
     Ok(installed)
 }
 
@@ -671,6 +688,18 @@ pub fn run() {
             // Create downloads directory if it doesn't exist
             std::fs::create_dir_all(&downloads_path)
                 .expect("Failed to create downloads directory");
+
+            // Initialize file logging
+            let log_path = app_data.join("debug.log");
+            if let Ok(log_file) = File::create(&log_path) {
+                let _ = CombinedLogger::init(vec![
+                    WriteLogger::new(LevelFilter::Debug, Config::default(), log_file),
+                ]);
+                log::info!("=== WoW HD Patcher started ===");
+                log::info!("Log file: {:?}", log_path);
+                log::info!("App data: {:?}", app_data);
+                log::info!("Downloads: {:?}", downloads_path);
+            }
 
             // Create and register InstallManager
             let install_manager = InstallManager::new(downloads_path);

@@ -73,8 +73,16 @@ impl GoogleDriveProvider {
         file_id: &str,
     ) -> Result<DirectDownloadInfo, DownloadError> {
         let initial_url = Self::get_direct_url(file_id);
+        log::info!("[GDrive] Resolving file ID: {}", file_id);
+        log::info!("[GDrive] Initial URL: {}", initial_url);
 
-        let response = self.client.get(&initial_url).send().await?;
+        let response = self.client.get(&initial_url)
+            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+            .header("Accept", "*/*")
+            .send()
+            .await?;
+
+        log::info!("[GDrive] Response status: {}", response.status());
 
         let content_type = response
             .headers()
@@ -82,9 +90,13 @@ impl GoogleDriveProvider {
             .and_then(|v| v.to_str().ok())
             .unwrap_or("");
 
+        log::info!("[GDrive] Content-Type: {}", content_type);
+
         // If we got HTML, it's the virus scan warning page
         if content_type.contains("text/html") {
+            log::info!("[GDrive] Got HTML response, parsing confirmation page...");
             let html = response.text().await?;
+            log::info!("[GDrive] HTML length: {} bytes", html.len());
             return self.parse_confirmation_page(&html, file_id);
         }
 

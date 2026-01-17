@@ -40,9 +40,13 @@ impl DropboxProvider {
 impl DownloadProvider for DropboxProvider {
     async fn resolve_direct_url(&self, share_url: &str) -> Result<DirectDownloadInfo, DownloadError> {
         let url = Self::get_direct_url(share_url);
+        log::info!("[Dropbox] Share URL: {}", share_url);
+        log::info!("[Dropbox] Direct URL: {}", url);
 
         // Make a HEAD request to get file info
+        log::info!("[Dropbox] Sending HEAD request...");
         let response = self.client.head(&url).send().await?;
+        log::info!("[Dropbox] Response status: {}", response.status());
 
         let content_length = response.content_length();
         let supports_range = response

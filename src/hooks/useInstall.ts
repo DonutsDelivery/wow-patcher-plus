@@ -73,7 +73,12 @@ export function useInstall() {
     };
 
     try {
+      console.log('[Install] Starting installation for:', patchIds);
       const installed = await installPatches(patchIds, onEvent);
+      console.log('[Install] Result:', installed);
+      if (installed.length === 0 && patchIds.length > 0) {
+        console.error('[Install] No patches were installed! Check if WoW path is set and downloads exist.');
+      }
       return installed;
     } finally {
       setInstalling(false);

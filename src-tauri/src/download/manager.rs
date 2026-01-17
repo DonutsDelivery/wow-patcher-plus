@@ -79,6 +79,10 @@ impl DownloadManager {
         on_event: Channel<DownloadEvent>,
         target_filename: Option<String>,
     ) -> Result<String, DownloadError> {
+        log::info!("[Download] Starting download for: {}", share_url);
+        log::info!("[Download] Provider: {:?}", provider_type);
+        log::info!("[Download] Dest dir: {:?}", dest_dir);
+
         // Acquire semaphore permit (blocks if MAX_CONCURRENT reached)
         let _permit = self
             .semaphore
@@ -87,8 +91,22 @@ impl DownloadManager {
             .await
             .map_err(|e| DownloadError::ProviderError(format!("Semaphore error: {}", e)))?;
 
+        log::info!("[Download] Acquired semaphore permit");
+
         // Resolve direct URL based on provider
-        let info = self.resolve_url(&share_url, provider_type).await?;
+        log::info!("[Download] Resolving URL...");
+        let info = match self.resolve_url(&share_url, provider_type).await {
+            Ok(info) => {
+                log::info!("[Download] Resolved URL: {}", info.url);
+                log::info!("[Download] File name: {:?}", info.file_name);
+                log::info!("[Download] Content length: {:?}", info.content_length);
+                info
+            }
+            Err(e) => {
+                log::info!("[Download] Failed to resolve URL: {:?}", e);
+                return Err(e);
+            }
+        };
 
         // Use target_filename if provided, otherwise fall back to provider filename or URL
         let file_name = target_filename.unwrap_or_else(|| {

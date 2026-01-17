@@ -80,11 +80,18 @@ impl InstallManager {
     }
 
     /// Install multiple patches
+    ///
+    /// Automatically clears the WDB cache folder before installing.
     pub async fn install_patches(
         &self,
         patch_ids: &[&str],
         on_event: Channel<InstallEvent>,
     ) -> Vec<Result<PathBuf, InstallError>> {
+        // Clear WDB folder before installing mods (required for mods to work properly)
+        if let Err(e) = self.clear_wdb_folder().await {
+            log::warn!("[Install] Failed to clear WDB folder: {:?}", e);
+        }
+
         let mut results = Vec::with_capacity(patch_ids.len());
 
         for id in patch_ids {
@@ -93,6 +100,38 @@ impl InstallManager {
         }
 
         results
+    }
+
+    /// Clear the WDB cache folder and replace with empty file
+    ///
+    /// The WDB folder contains cached data that must be cleared when mods are
+    /// installed or updated. Per the official guide:
+    /// 1. Delete the existing WDB folder
+    /// 2. Create an empty file named "WDB" (prevents WoW from recreating cache)
+    pub async fn clear_wdb_folder(&self) -> Result<(), InstallError> {
+        // Get path without holding lock across await
+        let wdb_path = {
+            let wow_path = self.wow_path.read().unwrap();
+            let path = wow_path.as_ref().ok_or(InstallError::WowPathNotSet)?;
+            path.join("WDB")
+        };
+
+        // Remove WDB whether it's a folder or file
+        if wdb_path.exists() {
+            log::info!("[Install] Removing WDB: {:?}", wdb_path);
+            if wdb_path.is_dir() {
+                tokio::fs::remove_dir_all(&wdb_path).await?;
+            } else {
+                tokio::fs::remove_file(&wdb_path).await?;
+            }
+        }
+
+        // Create empty file named WDB (prevents WoW from recreating cache folder)
+        log::info!("[Install] Creating empty WDB file to prevent cache recreation");
+        tokio::fs::File::create(&wdb_path).await?;
+        log::info!("[Install] WDB cleared and replaced with empty file");
+
+        Ok(())
     }
 
     /// Verify a single patch
@@ -118,11 +157,18 @@ impl InstallManager {
     }
 
     /// Repair multiple patches
+    ///
+    /// Automatically clears the WDB cache folder before repairing/updating.
     pub async fn repair_patches(
         &self,
         patch_ids: &[&str],
         on_event: Channel<InstallEvent>,
     ) -> Result<Vec<RepairResult>, InstallError> {
+        // Clear WDB folder before updating mods (required for mods to work properly)
+        if let Err(e) = self.clear_wdb_folder().await {
+            log::warn!("[Install] Failed to clear WDB folder: {:?}", e);
+        }
+
         let data_folder = self.get_data_folder()?;
         Ok(repair_all(patch_ids, &data_folder, &self.downloads_path, on_event).await)
     }

@@ -132,11 +132,14 @@ function App() {
   const handleStart = async () => {
     if (!canStart) return;
 
+    console.log('[App] Starting download phase');
     setAppState('downloading');
     await downloadAll(selectedPatches, variantSelections);
+    console.log('[App] Download phase complete, starting install');
 
     setAppState('installing');
     await install(Array.from(selectedModules));
+    console.log('[App] Install phase complete');
 
     setAppState('complete');
   };

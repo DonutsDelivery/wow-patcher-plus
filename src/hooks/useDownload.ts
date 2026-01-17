@@ -31,6 +31,8 @@ export function useDownload() {
       const onProgress = new Channel<DownloadEvent>();
 
       onProgress.onmessage = (msg) => {
+        console.log('[Download Event]', msg.event, msg.data);
+        // Update state first
         setDownloads(prev => {
           const next = new Map(prev);
           const current = next.get(msg.data.downloadId) || {
@@ -53,12 +55,15 @@ export function useDownload() {
               });
               break;
             case 'progress':
+              // Ensure percent only ever increases (prevents visual "bouncing")
+              const newPercent = Math.max(current.percent, msg.data.percent);
+              const newDownloaded = Math.max(current.downloadedBytes, msg.data.downloadedBytes);
               next.set(msg.data.downloadId, {
                 ...current,
-                downloadedBytes: msg.data.downloadedBytes,
+                downloadedBytes: newDownloaded,
                 totalBytes: msg.data.totalBytes,
                 speedBps: msg.data.speedBps,
-                percent: msg.data.percent,
+                percent: newPercent,
                 status: 'downloading',
               });
               break;
@@ -68,7 +73,6 @@ export function useDownload() {
                 percent: 100,
                 status: 'completed',
               });
-              resolve();
               break;
             case 'failed':
               next.set(msg.data.downloadId, {
@@ -76,23 +80,38 @@ export function useDownload() {
                 status: 'failed',
                 error: msg.data.error,
               });
-              reject(new Error(msg.data.error || 'Download failed'));
               break;
           }
           return next;
         });
+
+        // Resolve/reject AFTER state update, outside the updater function
+        if (msg.event === 'completed') {
+          console.log('[Download] Resolving promise for', module.id);
+          resolve();
+        } else if (msg.event === 'failed') {
+          console.log('[Download] Rejecting promise for', module.id, msg.data.error);
+          reject(new Error(msg.data.error || 'Download failed'));
+        }
       };
 
       const targetFilename = `Patch-${module.id.toUpperCase()}.mpq`;
+      console.log('[Download] Starting', module.id, link.url);
       startDownload(link.url, link.provider, destDir, onProgress, targetFilename)
-        .catch(reject);
+        .then(id => console.log('[Download] Got ID', id, 'for', module.id))
+        .catch(err => {
+          console.log('[Download] Start failed for', module.id, err);
+          reject(err);
+        });
     });
   }, []);
 
   const downloadAll = useCallback(async (modules: PatchModule[], variantSelections?: Map<string, number>) => {
+    console.log('[DownloadAll] Starting downloads for', modules.map(m => m.id));
     const results = await Promise.allSettled(
       modules.map(m => startModuleDownload(m, variantSelections?.get(m.id)))
     );
+    console.log('[DownloadAll] All downloads settled', results);
     return results;
   }, [startModuleDownload]);
 

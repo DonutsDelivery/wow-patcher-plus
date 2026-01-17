@@ -52,27 +52,44 @@ pub async fn download_with_resume(
         0
     };
 
+    log::info!("[Resume] Downloading from URL: {}", url);
+    log::info!("[Resume] Start position: {}", start_pos);
+
     // Build request with Range header if resuming
-    let mut request = client.get(url);
+    let mut request = client.get(url)
+        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+        .header("Accept", "*/*")
+        .header("Accept-Language", "en-US,en;q=0.9")
+        .header("Connection", "keep-alive");
+
     if start_pos > 0 {
         request = request.header(RANGE, format!("bytes={}-", start_pos));
+        log::info!("[Resume] Adding Range header: bytes={}-", start_pos);
     }
 
-    let response = request.send().await.map_err(DownloadError::RequestError)?;
+    log::info!("[Resume] Sending request...");
+    let response = match request.send().await {
+        Ok(r) => r,
+        Err(e) => {
+            log::info!("[Resume] Request failed: {:?}", e);
+            return Err(DownloadError::RequestError(e));
+        }
+    };
     let status = response.status();
+    log::info!("[Resume] Response status: {}", status);
 
     // Determine actual start position and total size based on response
-    let (actual_start, total_size) = if status == reqwest::StatusCode::PARTIAL_CONTENT {
+    let (actual_start, total_size, response) = if status == reqwest::StatusCode::PARTIAL_CONTENT {
         // Server accepted Range request (206 response)
         let total = parse_content_range_total(response.headers())?;
-        (start_pos, total)
+        (start_pos, total, response)
     } else if status == reqwest::StatusCode::OK {
         // Server doesn't support Range, or file changed - start fresh
         let total = response.content_length().unwrap_or(0);
-        (0, total)
+        (0, total, response)
     } else if status == reqwest::StatusCode::RANGE_NOT_SATISFIABLE {
         // File already complete (416 response)
-        let total = start_pos;
+        let _total = start_pos;
         on_event
             .send(DownloadEvent::Completed {
                 download_id,
@@ -80,12 +97,40 @@ pub async fn download_with_resume(
             })
             .map_err(|e| DownloadError::ChannelError(e.to_string()))?;
         return Ok(());
+    } else if status == reqwest::StatusCode::BAD_REQUEST && start_pos > 0 {
+        // 400 error while resuming - URL likely expired (MediaFire, etc.)
+        // Delete partial file and retry from scratch
+        log::info!("[Resume] Got 400 while resuming, deleting partial file and retrying fresh");
+        drop(response);
+        let _ = tokio::fs::remove_file(dest_path).await;
+
+        // Retry without Range header
+        let retry_request = client.get(url)
+            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+            .header("Accept", "*/*")
+            .header("Accept-Language", "en-US,en;q=0.9")
+            .header("Connection", "keep-alive");
+
+        log::info!("[Resume] Retrying download from start...");
+        let retry_response = retry_request.send().await.map_err(DownloadError::RequestError)?;
+        let retry_status = retry_response.status();
+        log::info!("[Resume] Retry response status: {}", retry_status);
+
+        if !retry_status.is_success() {
+            return Err(DownloadError::HttpError(retry_status));
+        }
+
+        let total = retry_response.content_length().unwrap_or(0);
+        (0, total, retry_response)
     } else {
         return Err(DownloadError::HttpError(status));
     };
 
     // Extract filename from response
     let file_name = extract_filename(&response, url);
+
+    log::info!("[Resume] Total size: {} bytes", total_size);
+    log::info!("[Resume] Actual start position: {}", actual_start);
 
     // Send started event
     on_event

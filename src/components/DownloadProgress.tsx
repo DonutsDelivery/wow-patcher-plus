@@ -7,14 +7,16 @@ interface Props {
 }
 
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B';
+  if (!bytes || bytes <= 0 || !isFinite(bytes)) return '0 B';
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const i = Math.min(Math.floor(Math.log(bytes) / Math.log(k)), sizes.length - 1);
+  if (i < 0 || !isFinite(i)) return '0 B';
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
 
 function formatSpeed(bps: number): string {
+  if (!bps || bps <= 0 || !isFinite(bps)) return '-- B/s';
   return formatBytes(bps) + '/s';
 }
 
@@ -40,7 +42,7 @@ export function DownloadProgress({ downloads }: Props) {
               {dl.status === 'failed' && 'Failed'}
             </span>
           </div>
-          <Progress value={dl.percent} className="h-2" />
+          <Progress value={isFinite(dl.percent) ? dl.percent : 0} className="h-2" />
           {dl.error && <p className="text-xs text-red-500">{dl.error}</p>}
         </div>
       ))}
