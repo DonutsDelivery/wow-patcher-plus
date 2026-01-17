@@ -14,7 +14,7 @@ Build a cross-platform desktop application that automates the HD Patch: Reforged
 - [x] **Phase 2: Download Engine** - Download files from external hosts with progress tracking
 - [x] **Phase 3: Installation Engine** - Copy MPQ files to WoW DATA folder with verification
 - [x] **Phase 4: GUI & Configuration** - Desktop interface with presets and module toggles
-- [ ] **Phase 5: Integration Fixes** - Fix cross-phase wiring issues found in audit
+- [x] **Phase 5: Integration Fixes** - Fix cross-phase wiring issues found in audit
 
 ## Phase Details
 
@@ -94,7 +94,7 @@ Plans:
   3. User can trigger verify and repair from the UI
 
 Plans:
-- [ ] 5-01: Type mismatch + filename convention + repair UI (Wave 1)
+- [x] 5-01: Type mismatch + filename convention + repair UI (Wave 1)
 
 ## Progress
 
@@ -107,7 +107,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | 2. Download Engine | 4/4 | Complete | 2026-01-16 |
 | 3. Installation Engine | 3/3 | Complete | 2026-01-16 |
 | 4. GUI & Configuration | 4/4 | Complete | 2026-01-17 |
-| 5. Integration Fixes | 0/1 | Pending | — |
+| 5. Integration Fixes | 1/1 | Complete | 2026-01-17 |
 
 ---
 *Created: 2026-01-16*
