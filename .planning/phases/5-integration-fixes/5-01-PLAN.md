@@ -6,6 +6,8 @@ wave: 1
 depends_on: []
 files_modified:
   - src-tauri/src/models/patch.rs
+  - src-tauri/src/lib.rs
+  - src-tauri/src/download/manager.rs
   - src/hooks/useDownload.ts
   - src/lib/tauri.ts
   - src/App.tsx
@@ -106,35 +108,62 @@ Frontend code `module.links[0]` will now access the correct data.
 </task>
 
 <task type="auto">
-  <name>Task 2: Fix download filename convention</name>
-  <files>src/hooks/useDownload.ts, src/lib/tauri.ts</files>
+  <name>Task 2a: Add target_filename parameter to Rust download pipeline</name>
+  <files>src-tauri/src/lib.rs, src-tauri/src/download/manager.rs</files>
   <action>
-The installer expects files named `Patch-{ID}.mpq` (from copier.rs:165), but downloads save with provider's original filename.
+The installer expects files named `Patch-{ID}.mpq` (from copier.rs:165), but downloads save with provider's original filename. This task adds the Rust backend support for custom filenames.
 
-Fix by modifying useDownload.ts to:
-1. Generate the expected filename `Patch-${module.id.toUpperCase()}.mpq`
-2. Pass the filename to startDownload (requires updating the Tauri command interface)
+1. Update src-tauri/src/lib.rs - add `target_filename` parameter to start_download command:
+```rust
+async fn start_download(
+    manager: State<'_, DownloadManager>,
+    share_url: String,
+    provider: String,
+    dest_dir: String,
+    on_progress: Channel<DownloadEvent>,
+    target_filename: Option<String>,  // Add this parameter
+) -> Result<String, String>
+```
 
-However, looking at the code flow more carefully:
-- DownloadManager.download() determines filename from provider info
-- The dest_path is created from dest_dir.join(file_name)
-- We need to pass the target filename from frontend
+Pass target_filename through to manager.download().
 
-Actually, the simplest fix is to rename the file AFTER download completes. Modify useDownload.ts:
-1. When 'completed' event arrives with filePath
-2. Use Tauri's fs plugin to rename to `Patch-{ID}.mpq`
+2. Update src-tauri/src/download/manager.rs - add `target_filename` parameter to download method:
+```rust
+pub async fn download(
+    &self,
+    share_url: String,
+    provider_type: ProviderType,
+    dest_dir: PathBuf,
+    download_id: String,
+    on_event: Channel<DownloadEvent>,
+    target_filename: Option<String>,  // Add this parameter
+) -> Result<String, DownloadError>
+```
 
-BUT - Tauri fs plugin may not be installed. Simpler approach:
+In the download method, use target_filename if provided instead of provider-supplied filename:
+```rust
+let file_name = target_filename.unwrap_or_else(|| {
+    // existing filename logic from provider info
+});
+```
+  </action>
+  <verify>
+Run `cargo check` in src-tauri to verify the code compiles.
+Run `cargo test` in src-tauri to verify no test regressions.
+  </verify>
+  <done>
+Rust download pipeline accepts optional target_filename parameter.
+When provided, downloaded files are saved with the specified filename.
+  </done>
+</task>
 
-Modify the Rust start_download command to accept an optional target_filename parameter:
-1. Update src/lib/tauri.ts: add `targetFilename?: string` parameter to startDownload
-2. Update src-tauri/src/lib.rs: add `target_filename: Option<String>` to start_download command
-3. Update src-tauri/src/download/manager.rs: use target_filename if provided instead of provider filename
-4. Update useDownload.ts: pass `Patch-${module.id.toUpperCase()}.mpq` as targetFilename
+<task type="auto">
+  <name>Task 2b: Update TypeScript to pass Patch-{ID}.mpq filename</name>
+  <files>src/lib/tauri.ts, src/hooks/useDownload.ts</files>
+  <action>
+Wire the frontend to pass the expected filename through to the Rust backend.
 
-Implementation details:
-
-In src/lib/tauri.ts, update startDownload:
+1. Update src/lib/tauri.ts - add `targetFilename` parameter to startDownload:
 ```typescript
 export async function startDownload(
   shareUrl: string,
@@ -147,48 +176,18 @@ export async function startDownload(
 }
 ```
 
-In src-tauri/src/lib.rs, update start_download command to accept target_filename:
-```rust
-async fn start_download(
-    manager: State<'_, DownloadManager>,
-    share_url: String,
-    provider: String,
-    dest_dir: String,
-    on_progress: Channel<DownloadEvent>,
-    target_filename: Option<String>,  // Add this
-) -> Result<String, String>
-```
-
-Pass target_filename to manager.download()
-
-In src-tauri/src/download/manager.rs, update download method:
-```rust
-pub async fn download(
-    &self,
-    share_url: String,
-    provider_type: ProviderType,
-    dest_dir: PathBuf,
-    download_id: String,
-    on_event: Channel<DownloadEvent>,
-    target_filename: Option<String>,  // Add this
-) -> Result<String, DownloadError>
-```
-
-Use target_filename.unwrap_or_else(|| /* existing filename logic */)
-
-In useDownload.ts, update startModuleDownload:
+2. Update src/hooks/useDownload.ts - pass the expected filename in startModuleDownload:
 ```typescript
 const targetFilename = `Patch-${module.id.toUpperCase()}.mpq`;
 const downloadId = await startDownload(link.url, link.provider, destDir, onProgress, targetFilename);
 ```
   </action>
   <verify>
-Run `cargo check` and `cargo test` in src-tauri
-Run `npm run build` to verify TypeScript compiles
+Run `npm run build` to verify TypeScript compiles without errors.
   </verify>
   <done>
 Downloads are saved as `Patch-{ID}.mpq` format.
-Installer can find downloaded files in downloads folder.
+Installer can find downloaded files in downloads folder using expected naming convention.
   </done>
 </task>
 
