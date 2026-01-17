@@ -80,5 +80,5 @@ export function useInstall() {
     }
   }, []);
 
-  return { installs, installing, install };
+  return { installs, setInstalls, installing, install };
 }
