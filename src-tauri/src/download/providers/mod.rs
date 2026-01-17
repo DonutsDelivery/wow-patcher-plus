@@ -1,13 +1,17 @@
 //! Download provider abstraction
 //!
-//! This module defines the trait that download providers (Google Drive, Mediafire)
+//! This module defines the trait that download providers (Google Drive, Mediafire, etc.)
 //! must implement to resolve share URLs to direct download URLs.
 
 pub mod gdrive;
 pub mod mediafire;
+pub mod dropbox;
+pub mod transfer;
 
 pub use gdrive::GoogleDriveProvider;
 pub use mediafire::MediafireProvider;
+pub use dropbox::DropboxProvider;
+pub use transfer::TransferProvider;
 
 use async_trait::async_trait;
 use crate::download::DownloadError;

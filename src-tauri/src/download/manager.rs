@@ -10,7 +10,7 @@ use tokio::sync::Semaphore;
 
 use crate::download::{
     progress::DownloadEvent,
-    providers::{GoogleDriveProvider, MediafireProvider, DirectDownloadInfo, DownloadProvider},
+    providers::{GoogleDriveProvider, MediafireProvider, DropboxProvider, TransferProvider, DirectDownloadInfo, DownloadProvider},
     resume::download_with_resume,
     DownloadError,
 };
@@ -125,6 +125,14 @@ impl DownloadManager {
             }
             ProviderType::Mediafire => {
                 let provider = MediafireProvider::new(self.client.clone());
+                provider.resolve_direct_url(share_url).await
+            }
+            ProviderType::Dropbox => {
+                let provider = DropboxProvider::new(self.client.clone());
+                provider.resolve_direct_url(share_url).await
+            }
+            ProviderType::Transfer => {
+                let provider = TransferProvider::new(self.client.clone());
                 provider.resolve_direct_url(share_url).await
             }
             ProviderType::Unknown => Err(DownloadError::ProviderError(
