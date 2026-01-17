@@ -8,6 +8,7 @@ pub struct PatchModule {
     pub id: PatchId,
     pub name: String,
     pub description: String,
+    #[serde(rename = "links")]
     pub downloads: Vec<DownloadLink>,
     pub dependencies: Vec<PatchId>,
     pub file_size: Option<String>,
