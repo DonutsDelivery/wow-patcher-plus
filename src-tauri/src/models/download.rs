@@ -17,5 +17,6 @@ pub enum DownloadProvider {
     GoogleDrive,
     Dropbox,
     Transfer,
+    Mega,
     Unknown,
 }

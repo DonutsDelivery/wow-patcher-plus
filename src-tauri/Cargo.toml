@@ -38,6 +38,9 @@ tauri-plugin-store = "2"
 flate2 = "1"
 tar = "0.4"
 chrono = "0.4"
+mega = "0.8"
+sluice = "0.5"
+tokio-util = { version = "0.7", features = ["compat"] }
 
 [dev-dependencies]
 tempfile = "3"

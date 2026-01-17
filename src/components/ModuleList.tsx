@@ -1,6 +1,7 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { PatchModule, PatchGroup } from '@/lib/tauri';
-import { Lock, Link } from 'lucide-react';
+import { Lock, Link, ExternalLink } from 'lucide-react';
+import { openUrl } from '@tauri-apps/plugin-opener';
 
 interface Props {
   modules: PatchModule[];
@@ -50,15 +51,34 @@ function ModuleItem({ mod, selected, onToggle, isLinkedGroup, variantIndex, onVa
         className="mt-0.5"
       />
       <div className="min-w-0 flex-1">
-        <label
-          htmlFor={mod.id}
-          className={`text-sm font-medium leading-tight ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-        >
-          <span className="font-bold">{mod.id}</span>: {mod.name}
-          {!satisfied && mod.dependencies.length > 0 && <Lock className="inline-block ml-1 h-3 w-3 text-yellow-500" />}
-          {hasConflict && <Lock className="inline-block ml-1 h-3 w-3 text-red-500" />}
-          {isLinkedGroup && <Link className="inline-block ml-1 h-3 w-3 text-blue-400" />}
-        </label>
+        <div className="flex items-center gap-1">
+          <label
+            htmlFor={mod.id}
+            className={`text-sm font-medium leading-tight ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+          >
+            <span className="font-bold">{mod.id}</span>: {mod.name}
+            {!satisfied && mod.dependencies.length > 0 && <Lock className="inline-block ml-1 h-3 w-3 text-yellow-500" />}
+            {hasConflict && <Lock className="inline-block ml-1 h-3 w-3 text-red-500" />}
+            {isLinkedGroup && <Link className="inline-block ml-1 h-3 w-3 text-blue-400" />}
+          </label>
+          {mod.forumUrl && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openUrl(mod.forumUrl!);
+              }}
+              className="p-0.5 hover:text-primary transition-colors"
+              title="View on forum"
+            >
+              <ExternalLink className="h-3 w-3" />
+            </button>
+          )}
+        </div>
+        {mod.author && (
+          <p className="text-xs text-muted-foreground">by {mod.author}</p>
+        )}
         {!satisfied && mod.dependencies.length > 0 && (
           <p className="text-xs text-yellow-500">
             Needs: {missing.join(', ')}

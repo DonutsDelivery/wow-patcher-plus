@@ -99,6 +99,7 @@ async fn fetch_patches(cache: State<'_, PatchesCache>) -> Result<PatchesResponse
                         "googledrive" | "gdrive" => ProviderType::GoogleDrive,
                         "dropbox" => ProviderType::Dropbox,
                         "transfer" => ProviderType::Transfer,
+                        "mega" => ProviderType::Mega,
                         _ => ProviderType::Unknown,
                     },
                     url: link["url"].as_str()?.to_string(),
@@ -120,6 +121,8 @@ async fn fetch_patches(cache: State<'_, PatchesCache>) -> Result<PatchesResponse
             .map(|arr| arr.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect());
 
         let preview: Option<String> = patch["preview"].as_str().map(|s| s.to_string());
+        let author: Option<String> = patch["author"].as_str().map(|s| s.to_string());
+        let forum_url: Option<String> = patch["forumUrl"].as_str().map(|s| s.to_string());
 
         modules.push(PatchModule {
             id: id.clone(),
@@ -132,6 +135,8 @@ async fn fetch_patches(cache: State<'_, PatchesCache>) -> Result<PatchesResponse
             last_updated: None,
             variants,
             preview,
+            author,
+            forum_url,
         });
     }
 
@@ -216,6 +221,7 @@ async fn start_download(
         "mediafire" => ProviderType::Mediafire,
         "dropbox" => ProviderType::Dropbox,
         "transfer" => ProviderType::Transfer,
+        "mega" => ProviderType::Mega,
         _ => ProviderType::Unknown,
     };
 

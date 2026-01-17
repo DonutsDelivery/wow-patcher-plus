@@ -24,6 +24,10 @@ pub struct PatchModule {
     pub variants: Option<Vec<String>>,
     /// Preview image URL
     pub preview: Option<String>,
+    /// Author/creator of the mod
+    pub author: Option<String>,
+    /// Link to forum post or source page
+    pub forum_url: Option<String>,
 }
 
 /// Group definition for organizing patches in the UI
@@ -61,4 +65,6 @@ pub struct PatchData {
     pub conflicts: Vec<PatchId>,
     pub variants: Option<Vec<String>>,
     pub preview: Option<String>,
+    pub author: Option<String>,
+    pub forum_url: Option<String>,
 }

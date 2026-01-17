@@ -7,11 +7,13 @@ pub mod gdrive;
 pub mod mediafire;
 pub mod dropbox;
 pub mod transfer;
+pub mod mega;
 
 pub use gdrive::GoogleDriveProvider;
 pub use mediafire::MediafireProvider;
 pub use dropbox::DropboxProvider;
 pub use transfer::TransferProvider;
+pub use mega::MegaProvider;
 
 use async_trait::async_trait;
 use crate::download::DownloadError;

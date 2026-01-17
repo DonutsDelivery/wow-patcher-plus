@@ -10,7 +10,7 @@ use tokio::sync::Semaphore;
 
 use crate::download::{
     progress::DownloadEvent,
-    providers::{GoogleDriveProvider, MediafireProvider, DropboxProvider, TransferProvider, DirectDownloadInfo, DownloadProvider},
+    providers::{GoogleDriveProvider, MediafireProvider, DropboxProvider, TransferProvider, MegaProvider, DirectDownloadInfo, DownloadProvider},
     resume::download_with_resume,
     DownloadError,
 };
@@ -92,7 +92,7 @@ impl DownloadManager {
 
         // Use target_filename if provided, otherwise fall back to provider filename or URL
         let file_name = target_filename.unwrap_or_else(|| {
-            info.file_name.unwrap_or_else(|| {
+            info.file_name.clone().unwrap_or_else(|| {
                 share_url
                     .split('/')
                     .last()
@@ -104,7 +104,30 @@ impl DownloadManager {
         });
         let dest_path = dest_dir.join(&file_name);
 
-        // Perform download with resume support
+        // MEGA downloads need special handling - use the mega crate directly
+        if provider_type == ProviderType::Mega {
+            let provider = MegaProvider::new(self.client.clone());
+
+            // Send started event
+            let _ = on_event.send(DownloadEvent::Started {
+                download_id: download_id.clone(),
+                file_name: file_name.clone(),
+                total_bytes: info.content_length.unwrap_or(0),
+            });
+
+            // Download using MEGA provider
+            let _bytes_downloaded = provider.download_to_file(&share_url, &dest_path).await?;
+
+            // Send completed event
+            let _ = on_event.send(DownloadEvent::Completed {
+                download_id,
+                file_path: dest_path.to_string_lossy().to_string(),
+            });
+
+            return Ok(dest_path.to_string_lossy().to_string());
+        }
+
+        // Perform download with resume support for other providers
         download_with_resume(&self.client, &info.url, &dest_path, download_id, on_event).await?;
 
         Ok(dest_path.to_string_lossy().to_string())
@@ -133,6 +156,10 @@ impl DownloadManager {
             }
             ProviderType::Transfer => {
                 let provider = TransferProvider::new(self.client.clone());
+                provider.resolve_direct_url(share_url).await
+            }
+            ProviderType::Mega => {
+                let provider = MegaProvider::new(self.client.clone());
                 provider.resolve_direct_url(share_url).await
             }
             ProviderType::Unknown => Err(DownloadError::ProviderError(

@@ -17,6 +17,8 @@ export interface PatchModule {
   conflicts: string[];
   variants?: string[];
   preview?: string;
+  author?: string;
+  forumUrl?: string;
 }
 
 export interface PatchGroup {

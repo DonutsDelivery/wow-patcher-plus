@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "groups": [
     {
       "name": "Core Visuals",
@@ -38,6 +38,11 @@
       "ids": ["T", "H"]
     },
     {
+      "name": "Druid Forms",
+      "description": "WotLK-style druid cat/bear forms",
+      "ids": ["DRUID"]
+    },
+    {
       "name": "Alternative Graphics",
       "description": "Incompatible with HD Patch",
       "ids": ["R"]
@@ -50,7 +55,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/yno9a9htkeimxgr/Patch-A.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "B": {
       "name": "Buildings",
@@ -58,7 +65,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/3f31m3oug3wocrq/Patch-B.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "C": {
       "name": "Creatures",
@@ -66,7 +75,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/00l85reelat91kv/Patch-C.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "D": {
       "name": "Doodads",
@@ -74,7 +85,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/et71nipmrz8k554/Patch-D.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "E": {
       "name": "Environment",
@@ -82,7 +95,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/33g9gjebqrmmj2a/Patch-E.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "G": {
       "name": "Gear & Weapons",
@@ -90,7 +105,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/qu7ty0e75vk9roj/Patch-G.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "I": {
       "name": "Interface",
@@ -98,7 +115,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/a0zywdwfy7kic4o/Patch-I.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "L": {
       "name": "A Little Extra for Females",
@@ -108,7 +127,9 @@
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/yu2o1u66x0rgwoo/Patch-L.mpq/file"}
       ],
       "variants": ["Regular Version", "Less Thicc Version"],
-      "dependencies": ["A", "G"]
+      "dependencies": ["A", "G"],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "M": {
       "name": "Maps & Loading Screens",
@@ -116,7 +137,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/tbnbyg0lntd7utx/Patch-M.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "N": {
       "name": "Darker Nights",
@@ -124,7 +147,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/9zgbg74avr3051z/Patch-N.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "O": {
       "name": "Raid Visuals Mod",
@@ -132,7 +157,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/l0fpmrrdthng8wz/Patch-O.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "S": {
       "name": "Sounds & Music",
@@ -140,7 +167,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/ma81gpkvvndbnlb/Patch-S.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "U": {
       "name": "Ultra HD Character Textures & Gear",
@@ -150,7 +179,9 @@
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/310agawowiov2ps/PATCH-U.mpq/file"}
       ],
       "variants": ["Ultra HD (unstable)", "Performance"],
-      "dependencies": ["A", "G"]
+      "dependencies": ["A", "G"],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "V": {
       "name": "Visual Effects for Spells",
@@ -158,7 +189,9 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/3cxkzx9wh93b8zl/Patch-V.mpq/file"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Stormhand81",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12120"
     },
     "F": {
       "name": "Fog Pushback",
@@ -167,7 +200,7 @@
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/14aHvyfr_ACL-UURbNa_fXRPcfQZoIw8n/view?usp=sharing"}
       ],
       "dependencies": [],
-      "preview": "https://i.ibb.co/example/fog-comparison.png"
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=8818"
     },
     "P": {
       "name": "Pretty Night Sky",
@@ -175,7 +208,8 @@
       "links": [
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/1qu99ZS-SQFfTtYodBmZWYiHmxL8QtUY4/view?usp=sharing"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=8891"
     },
     "T": {
       "name": "Dark UI Theme",
@@ -184,7 +218,8 @@
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/1R5lwGPlEE4M6y-TuijaosvoVFFlqzZMZ/view?usp=sharing"}
       ],
       "dependencies": [],
-      "preview": "https://i.imgur.com/VZhMpPf.png"
+      "preview": "https://i.imgur.com/VZhMpPf.png",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=10195"
     },
     "Y": {
       "name": "Blood Enhanced",
@@ -192,7 +227,8 @@
       "links": [
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/1dtNAsN4DbB05ZRO7jVWt6gfDe79pxeDW/view?usp=sharing"}
       ],
-      "dependencies": []
+      "dependencies": [],
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=7802"
     },
     "H": {
       "name": "Neon Pink Herbs",
@@ -201,7 +237,8 @@
         {"provider": "dropbox", "url": "https://www.dropbox.com/scl/fi/239ghrkc3ywss8quft672/patch-J.mpq"}
       ],
       "dependencies": [],
-      "preview": "https://i.ibb.co/DkgCXVV/Screenshot-2023-11-30-212703.png"
+      "preview": "https://i.ibb.co/DkgCXVV/Screenshot-2023-11-30-212703.png",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12005"
     },
     "J": {
       "name": "Glow Down (Elf Eye Glow)",
@@ -244,7 +281,8 @@
       ],
       "dependencies": [],
       "conflicts": ["A"],
-      "preview": "https://cdn.discordapp.com/attachments/718958512126034031/1166264311782592542/image.png"
+      "preview": "https://cdn.discordapp.com/attachments/718958512126034031/1166264311782592542/image.png",
+      "author": "Vidooo"
     },
     "R": {
       "name": "Faithful Upscale",
@@ -254,7 +292,22 @@
       ],
       "dependencies": [],
       "conflicts": ["A", "B", "C", "D", "E", "G", "L", "U"],
-      "preview": "https://i.ibb.co/YFk164zR/armor-upscale-comparison.png"
+      "preview": "https://i.ibb.co/YFk164zR/armor-upscale-comparison.png",
+      "author": "Appletrey",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=9283"
+    },
+    "DRUID": {
+      "name": "WotLK Druid Feral Forms",
+      "description": "WotLK-style cat and bear forms for Druids",
+      "links": [
+        {"provider": "mega", "url": "https://mega.nz/file/hr5G0DiD#-id6zNqMDF5upseVhT4KF7k96XDayksUuZovC9YunLQ"},
+        {"provider": "mega", "url": "https://mega.nz/file/Z35myDiB#6cmIt2R2qarZ7em_8gvyCsDAfvLvXv43H78wwbTJRBw"},
+        {"provider": "mega", "url": "https://mega.nz/file/o6wXXAxC#9tsQdNc6587EHgnrLxetNBzLSRZOWLsaVvICzlPZCGw"},
+        {"provider": "mega", "url": "https://mega.nz/file/pyZynZ5J#I-KnNCMZARDILT6F8MpnaULXGD_SmtixrxuGnJjygB8"},
+        {"provider": "mega", "url": "https://mega.nz/file/wyw1nDjC#42nWx-WRjdmVoVjZftUM5zv0ahB5MthO9x1LYqDawkM"}
+      ],
+      "variants": ["White", "Black", "Brown/Blue", "Lightbrown/Purple", "Grey/Blonde"],
+      "dependencies": []
     }
   }
 }
