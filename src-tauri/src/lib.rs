@@ -120,6 +120,7 @@ async fn start_download(
     provider: String,
     dest_dir: String,
     on_progress: Channel<DownloadEvent>,
+    target_filename: Option<String>,
 ) -> Result<String, String> {
     let download_id = uuid::Uuid::new_v4().to_string();
 
@@ -143,6 +144,7 @@ async fn start_download(
                 dest_path,
                 download_id_clone.clone(),
                 on_progress.clone(),
+                target_filename,
             )
             .await;
 

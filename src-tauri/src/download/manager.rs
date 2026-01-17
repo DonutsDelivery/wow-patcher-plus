@@ -66,6 +66,7 @@ impl DownloadManager {
     /// * `dest_dir` - Directory to save the downloaded file
     /// * `download_id` - Unique identifier for this download
     /// * `on_event` - Channel to send progress events
+    /// * `target_filename` - Optional custom filename (e.g., "Patch-A.mpq")
     ///
     /// # Returns
     /// The full path to the downloaded file on success
@@ -76,6 +77,7 @@ impl DownloadManager {
         dest_dir: PathBuf,
         download_id: String,
         on_event: Channel<DownloadEvent>,
+        target_filename: Option<String>,
     ) -> Result<String, DownloadError> {
         // Acquire semaphore permit (blocks if MAX_CONCURRENT reached)
         let _permit = self
@@ -88,15 +90,17 @@ impl DownloadManager {
         // Resolve direct URL based on provider
         let info = self.resolve_url(&share_url, provider_type).await?;
 
-        // Determine destination path
-        let file_name = info.file_name.unwrap_or_else(|| {
-            share_url
-                .split('/')
-                .last()
-                .map(|s| s.split('?').next().unwrap_or(s))
-                .filter(|s| !s.is_empty())
-                .map(|s| s.to_string())
-                .unwrap_or_else(|| format!("{}.download", download_id))
+        // Use target_filename if provided, otherwise fall back to provider filename or URL
+        let file_name = target_filename.unwrap_or_else(|| {
+            info.file_name.unwrap_or_else(|| {
+                share_url
+                    .split('/')
+                    .last()
+                    .map(|s| s.split('?').next().unwrap_or(s))
+                    .filter(|s| !s.is_empty())
+                    .map(|s| s.to_string())
+                    .unwrap_or_else(|| format!("{}.download", download_id))
+            })
         });
         let dest_path = dest_dir.join(&file_name);
 
