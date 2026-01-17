@@ -200,6 +200,7 @@
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/14aHvyfr_ACL-UURbNa_fXRPcfQZoIw8n/view?usp=sharing"}
       ],
       "dependencies": [],
+      "author": "Vidooo",
       "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=8818"
     },
     "P": {
@@ -209,6 +210,7 @@
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/1qu99ZS-SQFfTtYodBmZWYiHmxL8QtUY4/view?usp=sharing"}
       ],
       "dependencies": [],
+      "author": "Vidooo",
       "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=8891"
     },
     "T": {
@@ -219,6 +221,7 @@
       ],
       "dependencies": [],
       "preview": "https://i.imgur.com/VZhMpPf.png",
+      "author": "Majed",
       "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=10195"
     },
     "Y": {
@@ -228,6 +231,7 @@
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/1dtNAsN4DbB05ZRO7jVWt6gfDe79pxeDW/view?usp=sharing"}
       ],
       "dependencies": [],
+      "author": "Vidooo",
       "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=7802"
     },
     "H": {
@@ -238,6 +242,7 @@
       ],
       "dependencies": [],
       "preview": "https://i.ibb.co/DkgCXVV/Screenshot-2023-11-30-212703.png",
+      "author": "Witchblade",
       "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=12005"
     },
     "J": {
@@ -248,7 +253,8 @@
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/6ywd5tku4x9zrf9/GLOW_DOWN_-_NIGHTELF.rar/file"}
       ],
       "variants": ["High Elf Only", "Night Elf Only"],
-      "dependencies": []
+      "dependencies": [],
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=21009"
     },
     "W": {
       "name": "Boneless Undead",
@@ -261,7 +267,9 @@
       ],
       "variants": ["Male", "Female", "Male (Red Eyes)", "Female (Red Eyes)"],
       "dependencies": [],
-      "preview": "https://i.ibb.co/ckrp6gK/Boneless1.png"
+      "preview": "https://i.ibb.co/ckrp6gK/Boneless1.png",
+      "author": "Witchblade",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=7539"
     },
     "X": {
       "name": "High Elf Modifications",
@@ -271,7 +279,9 @@
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/1RVIJf_HHPLw8-Ghw4XSv5HFDoMmkPYpA/view?usp=sharing"}
       ],
       "variants": ["Void Elf Skins", "Alt Eyes"],
-      "dependencies": ["A"]
+      "dependencies": ["A"],
+      "author": "Vidooo",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=8843"
     },
     "Q": {
       "name": "Alt HD Environment",
@@ -307,7 +317,9 @@
         {"provider": "mega", "url": "https://mega.nz/file/wyw1nDjC#42nWx-WRjdmVoVjZftUM5zv0ahB5MthO9x1LYqDawkM"}
       ],
       "variants": ["White", "Black", "Brown/Blue", "Lightbrown/Purple", "Grey/Blonde"],
-      "dependencies": []
+      "dependencies": [],
+      "author": "Seacrabsam",
+      "forumUrl": "https://forum.turtle-wow.org/viewtopic.php?t=16108"
     }
   }
 }
