@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-16)
 
 **Core value:** One-click patch installation and repair — users never manually download, unpack, or place MPQ files.
-**Current focus:** Phase 4 — GUI Configuration (Complete)
+**Current focus:** Phase 5 — Integration Fixes (Complete)
 
 ## Current Position
 
-Phase: 4 of 4 (GUI Configuration)
-Plan: 4/4 complete
+Phase: 5 of 5 (Integration Fixes)
+Plan: 1/1 complete
 Status: Complete
-Last activity: 2026-01-16 — Completed 4-04-PLAN.md (CI/CD and Release Configuration)
+Last activity: 2026-01-17 — Completed 5-01-PLAN.md (Integration Fixes)
 
-Progress: ██████████ 100%
+Progress: ██████████████ 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
+- Total plans completed: 14
 - Average duration: 4 min
-- Total execution time: 46 min
+- Total execution time: 50 min
 
 **By Phase:**
 
@@ -31,9 +31,10 @@ Progress: ██████████ 100%
 | 2-download-engine | 4/4 | 16 min | 4 min |
 | 3-installation-engine | 3/3 | 10 min | 3 min |
 | 4-gui-configuration | 4/4 | 10 min | 2.5 min |
+| 5-integration-fixes | 1/1 | 4 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 3-03 (4 min), 4-01 (4 min), 4-02 (2 min), 4-03 (3 min), 4-04 (1 min)
+- Last 5 plans: 4-01 (4 min), 4-02 (2 min), 4-03 (3 min), 4-04 (1 min), 5-01 (4 min)
 - Trend: Consistent velocity, fast execution
 
 ## Accumulated Context
@@ -84,6 +85,8 @@ Recent decisions affecting current work:
 - Draft releases (releaseDraft: true) for review before publishing (from 4-04)
 - 4-way build matrix: Windows, Ubuntu 22.04, macOS ARM64, macOS x86_64 (from 4-04)
 - Use tauri-apps/tauri-action@v0 for building and releasing (from 4-04)
+- Use serde(rename) for Rust->TypeScript field name mapping (from 5-01)
+- targetFilename as optional parameter for custom download naming (from 5-01)
 
 ### Pending Todos
 
@@ -95,17 +98,18 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-01-16T22:42:00Z
-Stopped at: Completed 4-04-PLAN.md
+Last session: 2026-01-17T02:19:51Z
+Stopped at: Completed 5-01-PLAN.md
 Resume file: None
 
 ## Project Complete
 
-All 4 phases completed successfully:
+All 5 phases completed successfully:
 1. Foundation - Tauri project setup, forum parsing, URL extraction
 2. Download Engine - Google Drive, Mediafire, concurrent downloads, resume
 3. Installation Engine - WoW detection, settings, MPQ installation
 4. GUI Configuration - UI components, progress tracking, CI/CD pipeline
+5. Integration Fixes - Type mismatch fix, download naming, verify/repair UI
 
 Ready for release:
 - Tag with version (e.g., `git tag v0.1.0`) to trigger GitHub Actions release
