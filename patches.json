@@ -15,7 +15,7 @@
     {
       "name": "Audio & Atmosphere",
       "description": "Sound and lighting options",
-      "ids": ["S", "N", "O", "K", "P"]
+      "ids": ["S", "N", "O", "P"]
     },
     {
       "name": "Character Extras",
@@ -191,14 +191,6 @@
       "description": "Enhanced blood effects from combat displayed on ground",
       "links": [
         {"provider": "gdrive", "url": "https://drive.google.com/file/d/1dtNAsN4DbB05ZRO7jVWt6gfDe79pxeDW/view?usp=sharing"}
-      ],
-      "dependencies": []
-    },
-    "K": {
-      "name": "New Combat Sounds",
-      "description": "Replaced melee, spell, and death sounds",
-      "links": [
-        {"provider": "gdrive", "url": "https://drive.google.com/drive/folders/1zdeXTQOqc2B99OXnn2KhMC0-o0cJojg9?usp=sharing"}
       ],
       "dependencies": []
     },
