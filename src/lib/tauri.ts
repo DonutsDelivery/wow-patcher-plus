@@ -70,9 +70,10 @@ export async function startDownload(
   shareUrl: string,
   provider: string,
   destDir: string,
-  onProgress: Channel<DownloadEvent>
+  onProgress: Channel<DownloadEvent>,
+  targetFilename?: string
 ): Promise<string> {
-  return invoke('start_download', { shareUrl, provider, destDir, onProgress });
+  return invoke('start_download', { shareUrl, provider, destDir, onProgress, targetFilename });
 }
 
 export async function getActiveDownloads(): Promise<number> {

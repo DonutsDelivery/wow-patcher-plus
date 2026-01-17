@@ -77,7 +77,8 @@ export function useDownload() {
       });
     };
 
-    const downloadId = await startDownload(link.url, link.provider, destDir, onProgress);
+    const targetFilename = `Patch-${module.id.toUpperCase()}.mpq`;
+    const downloadId = await startDownload(link.url, link.provider, destDir, onProgress, targetFilename);
     return downloadId;
   }, []);
 
