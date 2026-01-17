@@ -15,5 +15,7 @@ pub struct DownloadLink {
 pub enum DownloadProvider {
     Mediafire,
     GoogleDrive,
+    Dropbox,
+    Transfer,
     Unknown,
 }

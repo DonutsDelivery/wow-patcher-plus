@@ -1,7 +1,7 @@
 pub mod patch;
 pub mod download;
 
-pub use patch::{PatchModule, PatchId};
+pub use patch::{PatchModule, PatchId, PatchGroup};
 pub use download::{DownloadLink, DownloadProvider};
 
 /// Parsed forum post content

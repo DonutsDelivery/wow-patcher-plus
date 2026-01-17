@@ -25,6 +25,17 @@ export const OPTIONAL_MODULES = {
   L: 'A Little Extra for Females',
   N: 'Darker Nights',
   O: 'Raid Visuals Mod',
+  F: 'Fog Pushback',
+  P: 'Pretty Night Sky',
+  T: 'Dark UI Theme',
+  Y: 'Blood Enhanced',
+  K: 'New Combat Sounds',
+  H: 'Neon Pink Herbs',
+  J: 'Glow Down (Elf Eye Glow)',
+  W: 'Boneless Undead',
+  X: 'High Elf Modifications',
+  Q: 'Alt HD Environment',
+  R: 'Faithful Upscale',
 } as const;
 
 export type PresetKey = keyof typeof PRESETS;

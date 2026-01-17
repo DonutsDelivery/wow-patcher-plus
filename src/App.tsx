@@ -21,7 +21,7 @@ type AppState = 'configure' | 'downloading' | 'installing' | 'complete';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('configure');
-  const { patches, selectedModules, loading, error, applyPreset, toggleModule } = usePatches();
+  const { patches, groups, selectedModules, loading, error, applyPreset, toggleModule } = usePatches();
   const { wowPath, loading: pathLoading, pickFolder } = useWowPath();
   const { downloads, downloadAll } = useDownload();
   const { installs, install, setInstalls } = useInstall();
@@ -189,6 +189,7 @@ function App() {
             <PresetSelector onSelect={applyPreset} />
             <ModuleList
               modules={patches}
+              groups={groups}
               selected={selectedModules}
               onToggle={toggleModule}
               variantSelections={variantSelections}
@@ -260,6 +261,17 @@ function App() {
           </Card>
         )}
       </div>
+
+      <p className="text-center text-xs text-muted-foreground mt-8">
+        <a
+          href="https://ko-fi.com/donutsdelivery"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-foreground transition-colors"
+        >
+          ☕ Support on Ko-fi
+        </a>
+      </p>
     </div>
   );
 }

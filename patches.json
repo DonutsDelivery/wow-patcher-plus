@@ -1,5 +1,48 @@
 {
-  "version": 1,
+  "version": 2,
+  "groups": [
+    {
+      "name": "Core Visuals",
+      "description": "Standalone HD patches",
+      "ids": ["A", "C", "G", "I", "M", "V"]
+    },
+    {
+      "name": "Environment Pack",
+      "description": "Linked - toggles together",
+      "ids": ["B", "D", "E"],
+      "linked": true
+    },
+    {
+      "name": "Audio & Atmosphere",
+      "description": "Sound and lighting options",
+      "ids": ["S", "N", "O", "K", "P"]
+    },
+    {
+      "name": "Character Extras",
+      "description": "Additional character options",
+      "ids": ["L", "U", "X"]
+    },
+    {
+      "name": "Visual Effects",
+      "description": "Combat and environment effects",
+      "ids": ["Y", "F", "Q"]
+    },
+    {
+      "name": "Race Customization",
+      "description": "Race-specific model changes",
+      "ids": ["W", "J"]
+    },
+    {
+      "name": "UI & Utilities",
+      "description": "Interface and quality of life",
+      "ids": ["T", "H"]
+    },
+    {
+      "name": "Alternative Graphics",
+      "description": "Incompatible with HD Patch",
+      "ids": ["R"]
+    }
+  ],
   "patches": {
     "A": {
       "name": "Player Characters & NPCs",
@@ -15,7 +58,7 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/3f31m3oug3wocrq/Patch-B.mpq/file"}
       ],
-      "dependencies": ["D", "E"]
+      "dependencies": []
     },
     "C": {
       "name": "Creatures",
@@ -31,7 +74,7 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/et71nipmrz8k554/Patch-D.mpq/file"}
       ],
-      "dependencies": ["B", "E"]
+      "dependencies": []
     },
     "E": {
       "name": "Environment",
@@ -39,7 +82,7 @@
       "links": [
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/33g9gjebqrmmj2a/Patch-E.mpq/file"}
       ],
-      "dependencies": ["B", "D"]
+      "dependencies": []
     },
     "G": {
       "name": "Gear & Weapons",
@@ -116,6 +159,110 @@
         {"provider": "mediafire", "url": "https://www.mediafire.com/file/3cxkzx9wh93b8zl/Patch-V.mpq/file"}
       ],
       "dependencies": []
+    },
+    "F": {
+      "name": "Fog Pushback",
+      "description": "Extended view distance and reduced fog",
+      "links": [
+        {"provider": "gdrive", "url": "https://drive.google.com/file/d/14aHvyfr_ACL-UURbNa_fXRPcfQZoIw8n/view?usp=sharing"}
+      ],
+      "dependencies": [],
+      "preview": "https://i.ibb.co/example/fog-comparison.png"
+    },
+    "P": {
+      "name": "Pretty Night Sky",
+      "description": "Enhanced starry night skies visible after 11pm",
+      "links": [
+        {"provider": "gdrive", "url": "https://drive.google.com/file/d/1qu99ZS-SQFfTtYodBmZWYiHmxL8QtUY4/view?usp=sharing"}
+      ],
+      "dependencies": []
+    },
+    "T": {
+      "name": "Dark UI Theme",
+      "description": "Complete dark theme for Blizzard UI and Turtle windows",
+      "links": [
+        {"provider": "gdrive", "url": "https://drive.google.com/file/d/1R5lwGPlEE4M6y-TuijaosvoVFFlqzZMZ/view?usp=sharing"}
+      ],
+      "dependencies": [],
+      "preview": "https://i.imgur.com/VZhMpPf.png"
+    },
+    "Y": {
+      "name": "Blood Enhanced",
+      "description": "Enhanced blood effects from combat displayed on ground",
+      "links": [
+        {"provider": "gdrive", "url": "https://drive.google.com/file/d/1dtNAsN4DbB05ZRO7jVWt6gfDe79pxeDW/view?usp=sharing"}
+      ],
+      "dependencies": []
+    },
+    "K": {
+      "name": "New Combat Sounds",
+      "description": "Replaced melee, spell, and death sounds",
+      "links": [
+        {"provider": "gdrive", "url": "https://drive.google.com/drive/folders/1zdeXTQOqc2B99OXnn2KhMC0-o0cJojg9?usp=sharing"}
+      ],
+      "dependencies": []
+    },
+    "H": {
+      "name": "Neon Pink Herbs",
+      "description": "Bright pink herb nodes for easy visibility",
+      "links": [
+        {"provider": "dropbox", "url": "https://www.dropbox.com/scl/fi/239ghrkc3ywss8quft672/patch-J.mpq"}
+      ],
+      "dependencies": [],
+      "preview": "https://i.ibb.co/DkgCXVV/Screenshot-2023-11-30-212703.png"
+    },
+    "J": {
+      "name": "Glow Down (Elf Eye Glow)",
+      "description": "Removes eye glow from High Elves and Night Elves",
+      "links": [
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/mly1s0fr4ld4727/GLOW_DOWN_-_HIGH_ELF.rar/file"},
+        {"provider": "mediafire", "url": "https://www.mediafire.com/file/6ywd5tku4x9zrf9/GLOW_DOWN_-_NIGHTELF.rar/file"}
+      ],
+      "variants": ["High Elf Only", "Night Elf Only"],
+      "dependencies": []
+    },
+    "W": {
+      "name": "Boneless Undead",
+      "description": "Undead model without exposed bones",
+      "links": [
+        {"provider": "dropbox", "url": "https://www.dropbox.com/s/ldkln1hdzbrg85q/patch-8.mpq?dl=0"},
+        {"provider": "dropbox", "url": "https://www.dropbox.com/s/bacmvj007ed0g1e/patch-9.mpq?dl=0"},
+        {"provider": "dropbox", "url": "https://www.dropbox.com/s/2mgay92ii9nu88w/patch-6.mpq?dl=0"},
+        {"provider": "dropbox", "url": "https://www.dropbox.com/s/p0cuoj6p1krasxr/patch-7.mpq?dl=0"}
+      ],
+      "variants": ["Male", "Female", "Male (Red Eyes)", "Female (Red Eyes)"],
+      "dependencies": [],
+      "preview": "https://i.ibb.co/ckrp6gK/Boneless1.png"
+    },
+    "X": {
+      "name": "High Elf Modifications",
+      "description": "Void Elf skins and enhanced High Elf eyes",
+      "links": [
+        {"provider": "gdrive", "url": "https://drive.google.com/file/d/1kYX86ARqfqUdVaXwnym1bZtVWPdmBaVh/view?usp=sharing"},
+        {"provider": "gdrive", "url": "https://drive.google.com/file/d/1RVIJf_HHPLw8-Ghw4XSv5HFDoMmkPYpA/view?usp=sharing"}
+      ],
+      "variants": ["Void Elf Skins", "Alt Eyes"],
+      "dependencies": ["A"]
+    },
+    "Q": {
+      "name": "Alt HD Environment",
+      "description": "HD grass, vegetation, bushes and trees",
+      "links": [
+        {"provider": "gdrive", "url": "https://drive.google.com/file/d/11j0LXsaRpdR-wziixXZnsQZ0ZFm1K6u6/view?usp=sharing"}
+      ],
+      "dependencies": [],
+      "conflicts": ["A"],
+      "preview": "https://cdn.discordapp.com/attachments/718958512126034031/1166264311782592542/image.png"
+    },
+    "R": {
+      "name": "Faithful Upscale",
+      "description": "Alternative vanilla-style HD textures (not compatible with HD Patch)",
+      "links": [
+        {"provider": "transfer", "url": "https://transfer.it/t/cBv7nL4RzZoY"}
+      ],
+      "dependencies": [],
+      "conflicts": ["A", "B", "C", "D", "E", "G", "L", "U"],
+      "preview": "https://i.ibb.co/YFk164zR/armor-upscale-comparison.png"
     }
   }
 }

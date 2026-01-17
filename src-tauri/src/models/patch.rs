@@ -3,56 +3,62 @@
 use serde::{Deserialize, Serialize};
 use crate::models::DownloadLink;
 
+/// Patch ID is now a simple string to allow dynamic patches from JSON
+pub type PatchId = String;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct PatchModule {
     pub id: PatchId,
     pub name: String,
     pub description: String,
     #[serde(rename = "links")]
     pub downloads: Vec<DownloadLink>,
+    #[serde(default)]
     pub dependencies: Vec<PatchId>,
+    #[serde(default)]
+    pub conflicts: Vec<PatchId>,
     pub file_size: Option<String>,
     pub last_updated: Option<String>,
-    /// Named variants for patches with multiple download options (e.g., Patch L)
+    /// Named variants for patches with multiple download options
     pub variants: Option<Vec<String>>,
+    /// Preview image URL
+    pub preview: Option<String>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub enum PatchId {
-    A, // Player Characters & NPCs
-    B, // Buildings (requires D, E)
-    C, // Creatures
-    D, // Doodads (requires B, E)
-    E, // Environment (requires B, D)
-    G, // Gear & Weapons
-    I, // Interface
-    L, // A Little Extra for Females (requires A)
-    M, // Maps & Loading Screens
-    N, // Darker Nights
-    O, // Raid Visuals Mod (requires S)
-    S, // Sounds & Music
-    U, // Ultra HD (requires A, G)
-    V, // Visual Effects for Spells
+/// Group definition for organizing patches in the UI
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PatchGroup {
+    pub name: String,
+    pub description: String,
+    pub ids: Vec<PatchId>,
+    /// If true, all patches in this group toggle together
+    #[serde(default)]
+    pub linked: bool,
 }
 
-impl PatchId {
-    /// Returns the human-readable name for this patch
-    pub fn name(&self) -> &'static str {
-        match self {
-            PatchId::A => "Player Characters & NPCs",
-            PatchId::B => "Buildings",
-            PatchId::C => "Creatures",
-            PatchId::D => "Doodads",
-            PatchId::E => "Environment",
-            PatchId::G => "Gear & Weapons",
-            PatchId::I => "Interface",
-            PatchId::L => "A Little Extra for Females",
-            PatchId::M => "Maps & Loading Screens",
-            PatchId::N => "Darker Nights",
-            PatchId::O => "Raid Visuals Mod",
-            PatchId::S => "Sounds & Music",
-            PatchId::U => "Ultra HD",
-            PatchId::V => "Visual Effects",
-        }
-    }
+/// Full patches configuration from remote JSON
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PatchesConfig {
+    pub version: u32,
+    pub patches: std::collections::HashMap<PatchId, PatchData>,
+    #[serde(default)]
+    pub groups: Vec<PatchGroup>,
+}
+
+/// Raw patch data from JSON (before conversion to PatchModule)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PatchData {
+    pub name: String,
+    pub description: String,
+    pub links: Vec<DownloadLink>,
+    #[serde(default)]
+    pub dependencies: Vec<PatchId>,
+    #[serde(default)]
+    pub conflicts: Vec<PatchId>,
+    pub variants: Option<Vec<String>>,
+    pub preview: Option<String>,
 }

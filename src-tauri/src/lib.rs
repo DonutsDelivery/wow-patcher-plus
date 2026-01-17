@@ -5,10 +5,11 @@ mod install;
 
 use std::collections::HashSet;
 use std::path::PathBuf;
+use std::sync::RwLock;
 use tauri::{ipc::Channel, Manager, State};
 use tauri_plugin_dialog::DialogExt;
 
-use models::{PatchModule, PatchId, DownloadLink, DownloadProvider as ProviderType};
+use models::{PatchModule, PatchId, PatchGroup, DownloadLink, DownloadProvider as ProviderType};
 use parser::dependencies::{validate_module_selection, auto_select_dependencies};
 use download::{DownloadManager, progress::DownloadEvent};
 use install::{
@@ -19,8 +20,54 @@ use install::{
 /// GitHub raw URL for patches.json
 const PATCHES_JSON_URL: &str = "https://raw.githubusercontent.com/DonutsDelivery/wow-patcher-plus/main/patches.json";
 
+/// Cached patches data for validation
+pub struct PatchesCache {
+    modules: RwLock<Vec<PatchModule>>,
+    groups: RwLock<Vec<PatchGroup>>,
+}
+
+impl PatchesCache {
+    pub fn new() -> Self {
+        Self {
+            modules: RwLock::new(Vec::new()),
+            groups: RwLock::new(Vec::new()),
+        }
+    }
+
+    pub fn update(&self, modules: Vec<PatchModule>, groups: Vec<PatchGroup>) {
+        *self.modules.write().unwrap() = modules;
+        *self.groups.write().unwrap() = groups;
+    }
+
+    pub fn get_modules(&self) -> Vec<PatchModule> {
+        self.modules.read().unwrap().clone()
+    }
+
+    pub fn get_groups(&self) -> Vec<PatchGroup> {
+        self.groups.read().unwrap().clone()
+    }
+
+    pub fn get_linked_groups(&self) -> Vec<Vec<PatchId>> {
+        self.groups
+            .read()
+            .unwrap()
+            .iter()
+            .filter(|g| g.linked)
+            .map(|g| g.ids.clone())
+            .collect()
+    }
+}
+
+/// Response type that includes both patches and groups
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PatchesResponse {
+    pub patches: Vec<PatchModule>,
+    pub groups: Vec<PatchGroup>,
+}
+
 #[tauri::command]
-async fn fetch_patches() -> Result<Vec<PatchModule>, String> {
+async fn fetch_patches(cache: State<'_, PatchesCache>) -> Result<PatchesResponse, String> {
     let client = reqwest::Client::new();
 
     // Try to fetch from GitHub
@@ -44,21 +91,14 @@ async fn fetch_patches() -> Result<Vec<PatchModule>, String> {
 
     let mut modules = Vec::new();
     for (id, patch) in patches {
-        let patch_id = match id.as_str() {
-            "A" => PatchId::A, "B" => PatchId::B, "C" => PatchId::C,
-            "D" => PatchId::D, "E" => PatchId::E, "G" => PatchId::G,
-            "I" => PatchId::I, "L" => PatchId::L, "M" => PatchId::M,
-            "N" => PatchId::N, "O" => PatchId::O, "S" => PatchId::S,
-            "U" => PatchId::U, "V" => PatchId::V,
-            _ => continue,
-        };
-
         let links: Vec<DownloadLink> = patch["links"].as_array()
             .map(|arr| arr.iter().filter_map(|link| {
                 Some(DownloadLink {
                     provider: match link["provider"].as_str()? {
                         "mediafire" => ProviderType::Mediafire,
-                        "googledrive" => ProviderType::GoogleDrive,
+                        "googledrive" | "gdrive" => ProviderType::GoogleDrive,
+                        "dropbox" => ProviderType::Dropbox,
+                        "transfer" => ProviderType::Transfer,
                         _ => ProviderType::Unknown,
                     },
                     url: link["url"].as_str()?.to_string(),
@@ -69,90 +109,90 @@ async fn fetch_patches() -> Result<Vec<PatchModule>, String> {
             .unwrap_or_default();
 
         let dependencies: Vec<PatchId> = patch["dependencies"].as_array()
-            .map(|arr| arr.iter().filter_map(|d| {
-                match d.as_str()? {
-                    "A" => Some(PatchId::A), "B" => Some(PatchId::B), "C" => Some(PatchId::C),
-                    "D" => Some(PatchId::D), "E" => Some(PatchId::E), "G" => Some(PatchId::G),
-                    "I" => Some(PatchId::I), "L" => Some(PatchId::L), "M" => Some(PatchId::M),
-                    "N" => Some(PatchId::N), "O" => Some(PatchId::O), "S" => Some(PatchId::S),
-                    "U" => Some(PatchId::U), "V" => Some(PatchId::V),
-                    _ => None,
-                }
-            }).collect())
+            .map(|arr| arr.iter().filter_map(|d| d.as_str().map(|s| s.to_string())).collect())
+            .unwrap_or_default();
+
+        let conflicts: Vec<PatchId> = patch["conflicts"].as_array()
+            .map(|arr| arr.iter().filter_map(|c| c.as_str().map(|s| s.to_string())).collect())
             .unwrap_or_default();
 
         let variants: Option<Vec<String>> = patch["variants"].as_array()
             .map(|arr| arr.iter().filter_map(|v| v.as_str().map(|s| s.to_string())).collect());
 
+        let preview: Option<String> = patch["preview"].as_str().map(|s| s.to_string());
+
         modules.push(PatchModule {
-            id: patch_id,
+            id: id.clone(),
             name: patch["name"].as_str().unwrap_or("Unknown").to_string(),
             description: patch["description"].as_str().unwrap_or("").to_string(),
             downloads: links,
             dependencies,
+            conflicts,
             file_size: None,
             last_updated: None,
             variants,
+            preview,
         });
     }
 
-    Ok(modules)
+    // Parse groups from JSON
+    let groups: Vec<PatchGroup> = json["groups"].as_array()
+        .map(|arr| arr.iter().filter_map(|g| {
+            Some(PatchGroup {
+                name: g["name"].as_str()?.to_string(),
+                description: g["description"].as_str().unwrap_or("").to_string(),
+                ids: g["ids"].as_array()?
+                    .iter()
+                    .filter_map(|id| id.as_str().map(|s| s.to_string()))
+                    .collect(),
+                linked: g["linked"].as_bool().unwrap_or(false),
+            })
+        }).collect())
+        .unwrap_or_default();
+
+    // Update cache for validation
+    cache.update(modules.clone(), groups.clone());
+
+    Ok(PatchesResponse { patches: modules, groups })
 }
 
 #[tauri::command]
-fn validate_selection(selected: Vec<String>) -> Result<(), Vec<String>> {
-    let patch_ids: HashSet<PatchId> = selected
-        .iter()
-        .filter_map(|s| match s.as_str() {
-            "A" => Some(PatchId::A),
-            "B" => Some(PatchId::B),
-            "C" => Some(PatchId::C),
-            "D" => Some(PatchId::D),
-            "E" => Some(PatchId::E),
-            "G" => Some(PatchId::G),
-            "I" => Some(PatchId::I),
-            "L" => Some(PatchId::L),
-            "M" => Some(PatchId::M),
-            "N" => Some(PatchId::N),
-            "O" => Some(PatchId::O),
-            "S" => Some(PatchId::S),
-            "U" => Some(PatchId::U),
-            "V" => Some(PatchId::V),
-            _ => None,
-        })
-        .collect();
+fn validate_selection(
+    cache: State<'_, PatchesCache>,
+    selected: Vec<String>,
+) -> Result<(), Vec<String>> {
+    let patch_ids: HashSet<PatchId> = selected.into_iter().collect();
+    let modules = cache.get_modules();
+    let linked_groups = cache.get_linked_groups();
 
-    validate_module_selection(&patch_ids)
+    validate_module_selection(&patch_ids, &modules, &linked_groups)
 }
 
 #[tauri::command]
-fn auto_select_deps(selected: Vec<String>) -> Vec<String> {
-    let patch_ids: HashSet<PatchId> = selected
-        .iter()
-        .filter_map(|s| match s.as_str() {
-            "A" => Some(PatchId::A),
-            "B" => Some(PatchId::B),
-            "C" => Some(PatchId::C),
-            "D" => Some(PatchId::D),
-            "E" => Some(PatchId::E),
-            "G" => Some(PatchId::G),
-            "I" => Some(PatchId::I),
-            "L" => Some(PatchId::L),
-            "M" => Some(PatchId::M),
-            "N" => Some(PatchId::N),
-            "O" => Some(PatchId::O),
-            "S" => Some(PatchId::S),
-            "U" => Some(PatchId::U),
-            "V" => Some(PatchId::V),
-            _ => None,
-        })
-        .collect();
+fn auto_select_deps(
+    cache: State<'_, PatchesCache>,
+    selected: Vec<String>,
+) -> Vec<String> {
+    let patch_ids: HashSet<PatchId> = selected.into_iter().collect();
+    let modules = cache.get_modules();
+    let linked_groups = cache.get_linked_groups();
 
-    let with_deps = auto_select_dependencies(&patch_ids);
+    let with_deps = auto_select_dependencies(&patch_ids, &modules, &linked_groups);
 
-    with_deps
-        .iter()
-        .map(|id| format!("{:?}", id))
+    with_deps.into_iter().collect()
+}
+
+/// Get conflicts for selected patches
+#[tauri::command]
+fn get_conflicts(
+    cache: State<'_, PatchesCache>,
+    selected: Vec<String>,
+) -> Vec<String> {
+    let patch_ids: HashSet<PatchId> = selected.into_iter().collect();
+    let modules = cache.get_modules();
+
+    parser::dependencies::get_conflicts(&patch_ids, &modules)
+        .into_iter()
         .collect()
 }
 
@@ -174,6 +214,8 @@ async fn start_download(
     let provider_type = match provider.to_lowercase().as_str() {
         "googledrive" | "google_drive" | "gdrive" => ProviderType::GoogleDrive,
         "mediafire" => ProviderType::Mediafire,
+        "dropbox" => ProviderType::Dropbox,
+        "transfer" => ProviderType::Transfer,
         _ => ProviderType::Unknown,
     };
 
@@ -631,11 +673,13 @@ pub fn run() {
             Ok(())
         })
         .manage(DownloadManager::new())
+        .manage(PatchesCache::new())
         .invoke_handler(tauri::generate_handler![
             // Parser commands
             fetch_patches,
             validate_selection,
             auto_select_deps,
+            get_conflicts,
             // Download commands
             start_download,
             get_active_downloads,

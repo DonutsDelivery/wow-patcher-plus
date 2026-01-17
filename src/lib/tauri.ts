@@ -14,7 +14,21 @@ export interface PatchModule {
   description: string;
   links: DownloadLink[];
   dependencies: string[];
+  conflicts: string[];
   variants?: string[];
+  preview?: string;
+}
+
+export interface PatchGroup {
+  name: string;
+  description: string;
+  ids: string[];
+  linked?: boolean;
+}
+
+export interface PatchesResponse {
+  patches: PatchModule[];
+  groups: PatchGroup[];
 }
 
 // Download events (matches DownloadEvent in progress.rs with serde camelCase)
@@ -44,8 +58,12 @@ export interface RepairResult {
 }
 
 // Parser commands
-export async function fetchPatches(): Promise<PatchModule[]> {
+export async function fetchPatches(): Promise<PatchesResponse> {
   return invoke('fetch_patches');
+}
+
+export async function getConflicts(selected: string[]): Promise<string[]> {
+  return invoke('get_conflicts', { selected });
 }
 
 export async function validateSelection(selected: string[]): Promise<void> {

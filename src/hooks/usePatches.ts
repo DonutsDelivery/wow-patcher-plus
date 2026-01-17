@@ -1,16 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
-import { fetchPatches, autoSelectDeps, PatchModule } from '@/lib/tauri';
+import { fetchPatches, autoSelectDeps, PatchModule, PatchGroup } from '@/lib/tauri';
 import { PRESETS, PresetKey } from '@/lib/presets';
 
 export function usePatches() {
   const [patches, setPatches] = useState<PatchModule[]>([]);
+  const [groups, setGroups] = useState<PatchGroup[]>([]);
   const [selectedModules, setSelectedModules] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPatches()
-      .then(setPatches)
+      .then(response => {
+        setPatches(response.patches);
+        setGroups(response.groups);
+      })
       .catch(e => setError(e.toString()))
       .finally(() => setLoading(false));
   }, []);
@@ -33,5 +37,5 @@ export function usePatches() {
     });
   }, []);
 
-  return { patches, selectedModules, loading, error, applyPreset, toggleModule, setSelectedModules };
+  return { patches, groups, selectedModules, loading, error, applyPreset, toggleModule, setSelectedModules };
 }
