@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { PresetSelector } from '@/components/PresetSelector';
@@ -12,136 +12,127 @@ import { usePatches } from '@/hooks/usePatches';
 import { useWowPath } from '@/hooks/useWowPath';
 import { useDownload } from '@/hooks/useDownload';
 import { useInstall } from '@/hooks/useInstall';
-import { verifyPatches, repairPatches, InstallEvent } from '@/lib/tauri';
-import { Channel } from '@tauri-apps/api/core';
-import { Loader2, RefreshCw } from 'lucide-react';
+import { detectInstalledPatches, uninstallPatches } from '@/lib/tauri';
+import { Loader2, Plus, Minus, RefreshCw } from 'lucide-react';
 import './App.css';
 
-type AppState = 'configure' | 'downloading' | 'installing' | 'complete';
+type AppState = 'configure' | 'downloading' | 'installing' | 'uninstalling' | 'complete';
 
 function App() {
   const [appState, setAppState] = useState<AppState>('configure');
-  const { patches, groups, selectedModules, loading, error, applyPreset, toggleModule } = usePatches();
+  const { patches, groups, selectedModules, loading, error, applyPreset, toggleModule, setSelectedModules } = usePatches();
   const { wowPath, loading: pathLoading, pickFolder } = useWowPath();
   const { downloads, downloadAll } = useDownload();
   const { installs, install, setInstalls } = useInstall();
-  const [verifyResults, setVerifyResults] = useState<Map<string, string>>(new Map());
-  const [repairing, setRepairing] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [updating, setUpdating] = useState(false);
   const [variantSelections, setVariantSelections] = useState<Map<string, number>>(new Map());
+  const [installedPatches, setInstalledPatches] = useState<Set<string>>(new Set());
+  const [detecting, setDetecting] = useState(false);
+  const [applying, setApplying] = useState(false);
 
-  const selectedPatches = patches.filter(p => selectedModules.has(p.id));
-  const canStart = selectedModules.size > 0 && wowPath !== null;
+  // Calculate what needs to change
+  const toInstall = Array.from(selectedModules).filter(id => !installedPatches.has(id));
+  const toUninstall = Array.from(installedPatches).filter(id => !selectedModules.has(id));
+  const alreadyInstalled = Array.from(selectedModules).filter(id => installedPatches.has(id));
 
-  const handleVerify = async () => {
-    setVerifying(true);
-    setVerifyResults(new Map());
-    try {
-      const results = await verifyPatches(Array.from(selectedModules));
-      const resultMap = new Map<string, string>();
-      results.forEach(([id, result]) => {
-        resultMap.set(id, result.status);
-      });
-      setVerifyResults(resultMap);
-    } finally {
-      setVerifying(false);
+  const hasChanges = toInstall.length > 0 || toUninstall.length > 0;
+  const canApply = wowPath !== null && (hasChanges || selectedModules.size > 0);
+
+  // Detect installed patches when wowPath or patches change
+  const detectInstalled = useCallback(async () => {
+    if (!wowPath || patches.length === 0) {
+      setInstalledPatches(new Set());
+      return;
     }
+
+    setDetecting(true);
+    try {
+      const patchIds = patches.map(p => p.id);
+      const installed = await detectInstalledPatches(patchIds);
+      const installedSet = new Set(installed);
+      setInstalledPatches(installedSet);
+
+      // Auto-select installed mods
+      if (installed.length > 0 && selectedModules.size === 0) {
+        setSelectedModules(installedSet);
+      }
+    } catch (err) {
+      console.error('Failed to detect installed patches:', err);
+      setInstalledPatches(new Set());
+    } finally {
+      setDetecting(false);
+    }
+  }, [wowPath, patches, selectedModules.size, setSelectedModules]);
+
+  // Run detection when wowPath or patches change
+  useEffect(() => {
+    detectInstalled();
+  }, [wowPath, patches.length]); // Only re-run when path or patches list changes, not on every detectInstalled change
+
+  // Custom folder picker that triggers detection after selection
+  const handlePickFolder = async () => {
+    const path = await pickFolder();
+    return path;
   };
 
-  const handleRepair = async () => {
-    setRepairing(true);
-    setVerifyResults(new Map());
-    try {
-      const onEvent = new Channel<InstallEvent>();
-      onEvent.onmessage = (msg) => {
-        setInstalls(prev => {
-          const next = new Map(prev);
-          const patchId = msg.data.patchId;
-          const current = next.get(patchId) || {
-            patchId,
-            fileName: '',
-            copiedBytes: 0,
-            totalBytes: 0,
-            percent: 0,
-            status: 'pending' as const,
-          };
+  // Unified Apply function - handles install, uninstall, and update
+  const handleApply = async () => {
+    if (!wowPath) return;
 
-          switch (msg.event) {
-            case 'started':
-              next.set(patchId, {
-                ...current,
-                fileName: msg.data.fileName,
-                status: 'installing',
-              });
-              break;
-            case 'progress':
-              next.set(patchId, {
-                ...current,
-                copiedBytes: msg.data.bytesCopied,
-                totalBytes: msg.data.totalBytes,
-                percent: msg.data.totalBytes > 0
-                  ? (msg.data.bytesCopied / msg.data.totalBytes) * 100
-                  : 0,
-                status: 'installing',
-              });
-              break;
-            case 'completed':
-              next.set(patchId, {
-                ...current,
-                percent: 100,
-                status: 'completed',
-              });
-              break;
-            case 'failed':
-              next.set(patchId, {
-                ...current,
-                status: 'failed',
-                error: msg.data.error,
-              });
-              break;
-          }
-          return next;
-        });
-      };
-      await repairPatches(Array.from(selectedModules), onEvent);
-    } finally {
-      setRepairing(false);
-    }
-  };
-
-  const handleUpdateAll = async () => {
-    if (!canStart) return;
-    setUpdating(true);
-    setAppState('downloading');
+    setApplying(true);
+    setInstalls(new Map());
 
     try {
-      // Re-download all selected patches
-      await downloadAll(selectedPatches, variantSelections);
+      // Step 1: Uninstall mods that were deselected
+      if (toUninstall.length > 0) {
+        console.log('[App] Uninstalling:', toUninstall);
+        setAppState('uninstalling');
+        await uninstallPatches(toUninstall);
+      }
 
-      // Re-install them
-      setAppState('installing');
-      await install(Array.from(selectedModules));
+      // Step 2: Download new mods
+      if (toInstall.length > 0) {
+        console.log('[App] Downloading:', toInstall);
+        setAppState('downloading');
+        const patchesToDownload = patches.filter(p => toInstall.includes(p.id));
+        await downloadAll(patchesToDownload, variantSelections);
+
+        // Step 3: Install new mods
+        console.log('[App] Installing:', toInstall);
+        setAppState('installing');
+        await install(toInstall);
+      }
 
       setAppState('complete');
+
+      // Refresh detection
+      await detectInstalled();
+    } catch (err) {
+      console.error('[App] Apply failed:', err);
     } finally {
-      setUpdating(false);
+      setApplying(false);
     }
   };
 
-  const handleStart = async () => {
-    if (!canStart) return;
+  // Get button text based on what will happen
+  const getApplyButtonText = () => {
+    if (applying) {
+      if (appState === 'uninstalling') return 'Removing...';
+      if (appState === 'downloading') return 'Downloading...';
+      if (appState === 'installing') return 'Installing...';
+      return 'Applying...';
+    }
 
-    console.log('[App] Starting download phase');
-    setAppState('downloading');
-    await downloadAll(selectedPatches, variantSelections);
-    console.log('[App] Download phase complete, starting install');
+    if (!hasChanges) {
+      if (installedPatches.size > 0 && selectedModules.size === installedPatches.size) {
+        return 'Up to date';
+      }
+      return 'Select mods to install';
+    }
 
-    setAppState('installing');
-    await install(Array.from(selectedModules));
-    console.log('[App] Install phase complete');
-
-    setAppState('complete');
+    const parts: string[] = [];
+    if (toInstall.length > 0) parts.push(`Install ${toInstall.length}`);
+    if (toUninstall.length > 0) parts.push(`Remove ${toUninstall.length}`);
+    return parts.join(', ');
   };
 
   if (loading) {
@@ -187,8 +178,45 @@ function App() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <FolderPicker path={wowPath} loading={pathLoading} onPick={pickFolder} />
+            <FolderPicker path={wowPath} loading={pathLoading} onPick={handlePickFolder} />
             <RequirementsPanel wowPath={wowPath} />
+
+            {/* Status summary */}
+            {wowPath && !detecting && (
+              <div className="rounded-lg border bg-muted/50 p-3 text-sm space-y-1">
+                {installedPatches.size > 0 && (
+                  <div className="text-muted-foreground">
+                    {installedPatches.size} mod{installedPatches.size !== 1 ? 's' : ''} currently installed
+                  </div>
+                )}
+                {hasChanges && (
+                  <div className="flex flex-wrap gap-3 pt-1">
+                    {toInstall.length > 0 && (
+                      <span className="flex items-center gap-1 text-green-600">
+                        <Plus className="h-3 w-3" />
+                        {toInstall.length} to install
+                      </span>
+                    )}
+                    {toUninstall.length > 0 && (
+                      <span className="flex items-center gap-1 text-red-500">
+                        <Minus className="h-3 w-3" />
+                        {toUninstall.length} to remove
+                      </span>
+                    )}
+                    {alreadyInstalled.length > 0 && (
+                      <span className="flex items-center gap-1 text-muted-foreground">
+                        <RefreshCw className="h-3 w-3" />
+                        {alreadyInstalled.length} unchanged
+                      </span>
+                    )}
+                  </div>
+                )}
+                {!hasChanges && installedPatches.size > 0 && selectedModules.size > 0 && (
+                  <div className="text-green-600">All selected mods are installed</div>
+                )}
+              </div>
+            )}
+
             <PresetSelector onSelect={applyPreset} />
             <ModuleList
               modules={patches}
@@ -199,6 +227,7 @@ function App() {
               onVariantChange={(patchId, index) => {
                 setVariantSelections(prev => new Map(prev).set(patchId, index));
               }}
+              installedPatches={installedPatches}
             />
           </CardContent>
         </Card>
@@ -222,47 +251,13 @@ function App() {
         <div className="flex justify-center">
           <Button
             size="lg"
-            onClick={handleStart}
-            disabled={!canStart || appState !== 'configure'}
+            onClick={appState === 'complete' ? () => setAppState('configure') : handleApply}
+            disabled={!canApply || (!hasChanges && appState !== 'complete') || applying}
           >
-            {appState === 'configure' && `Install ${selectedModules.size} Module${selectedModules.size !== 1 ? 's' : ''}`}
-            {appState === 'downloading' && 'Downloading...'}
-            {appState === 'installing' && 'Installing...'}
-            {appState === 'complete' && 'Complete!'}
+            {appState === 'complete' ? 'Done' : getApplyButtonText()}
           </Button>
         </div>
 
-        {appState === 'complete' && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-green-500">Installation Complete!</CardTitle>
-              <CardDescription>You can now launch WoW.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-wrap gap-3 justify-center">
-                <Button variant="outline" onClick={handleVerify} disabled={verifying || repairing || updating}>
-                  {verifying ? 'Verifying...' : 'Verify'}
-                </Button>
-                <Button variant="outline" onClick={handleRepair} disabled={repairing || verifying || updating}>
-                  {repairing ? 'Repairing...' : 'Repair'}
-                </Button>
-                <Button variant="default" onClick={handleUpdateAll} disabled={updating || verifying || repairing}>
-                  <RefreshCw className={`h-4 w-4 mr-2 ${updating ? 'animate-spin' : ''}`} />
-                  {updating ? 'Updating...' : 'Update ALL'}
-                </Button>
-              </div>
-              {verifyResults.size > 0 && (
-                <div className="text-sm space-y-1">
-                  {Array.from(verifyResults.entries()).map(([id, status]) => (
-                    <div key={id} className={status === 'ok' ? 'text-green-500' : 'text-red-500'}>
-                      Patch {id}: {status}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
       </div>
 
       <p className="text-center text-xs text-muted-foreground mt-8">
@@ -272,7 +267,7 @@ function App() {
           rel="noopener noreferrer"
           className="hover:text-foreground transition-colors"
         >
-          ☕ Support on Ko-fi
+          Support on Ko-fi
         </a>
       </p>
     </div>

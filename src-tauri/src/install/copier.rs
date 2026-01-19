@@ -164,3 +164,18 @@ async fn copy_with_progress(
 pub fn get_mpq_filename(patch_id: &str) -> String {
     format!("Patch-{}.mpq", patch_id.to_uppercase())
 }
+
+/// Uninstall (remove) an MPQ file from the WoW Data folder
+pub async fn uninstall_mpq(
+    data_folder: &Path,
+    patch_id: &str,
+) -> Result<(), InstallError> {
+    let file_name = get_mpq_filename(patch_id);
+    let file_path = data_folder.join(&file_name);
+
+    if file_path.exists() {
+        fs::remove_file(&file_path).await?;
+    }
+
+    Ok(())
+}

@@ -1,7 +1,12 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { PatchModule, PatchGroup } from '@/lib/tauri';
-import { Lock, Link, ExternalLink } from 'lucide-react';
+import { Lock, Link, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { openUrl } from '@tauri-apps/plugin-opener';
+
+// Fix old forum URLs to use the current domain
+function fixForumUrl(url: string): string {
+  return url.replace('forum.turtle-wow.org', 'forum.turtlecraft.gg');
+}
 
 interface Props {
   modules: PatchModule[];
@@ -10,6 +15,7 @@ interface Props {
   onToggle: (moduleId: string) => void;
   variantSelections: Map<string, number>;
   onVariantChange: (patchId: string, index: number) => void;
+  installedPatches?: Set<string>;
 }
 
 // Check if all dependencies for a module are satisfied
@@ -31,9 +37,10 @@ interface ModuleItemProps {
   isLinkedGroup?: boolean;
   variantIndex: number;
   onVariantChange: (index: number) => void;
+  isInstalled?: boolean;
 }
 
-function ModuleItem({ mod, selected, onToggle, isLinkedGroup, variantIndex, onVariantChange }: ModuleItemProps) {
+function ModuleItem({ mod, selected, onToggle, isLinkedGroup, variantIndex, onVariantChange, isInstalled }: ModuleItemProps) {
   const { satisfied, missing } = getDependencyStatus(mod, selected);
   const { hasConflict, conflicting } = getConflictStatus(mod, selected);
   const isDisabled = (!satisfied && mod.dependencies.length > 0) || hasConflict;
@@ -57,6 +64,7 @@ function ModuleItem({ mod, selected, onToggle, isLinkedGroup, variantIndex, onVa
             className={`text-sm font-medium leading-tight ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
           >
             <span className="font-bold">{mod.id}</span>: {mod.name}
+            {isInstalled && <span title="Installed"><CheckCircle2 className="inline-block ml-1 h-3 w-3 text-green-500" /></span>}
             {!satisfied && mod.dependencies.length > 0 && <Lock className="inline-block ml-1 h-3 w-3 text-yellow-500" />}
             {hasConflict && <Lock className="inline-block ml-1 h-3 w-3 text-red-500" />}
             {isLinkedGroup && <Link className="inline-block ml-1 h-3 w-3 text-blue-400" />}
@@ -67,7 +75,7 @@ function ModuleItem({ mod, selected, onToggle, isLinkedGroup, variantIndex, onVa
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                openUrl(mod.forumUrl!);
+                openUrl(fixForumUrl(mod.forumUrl!));
               }}
               className="p-0.5 hover:text-primary transition-colors"
               title="View on forum"
@@ -108,7 +116,7 @@ function ModuleItem({ mod, selected, onToggle, isLinkedGroup, variantIndex, onVa
   );
 }
 
-export function ModuleList({ modules, groups, selected, onToggle, variantSelections, onVariantChange }: Props) {
+export function ModuleList({ modules, groups, selected, onToggle, variantSelections, onVariantChange, installedPatches }: Props) {
   const moduleMap = new Map(modules.map(m => [m.id, m]));
 
   // Get linked group for a module
@@ -167,6 +175,7 @@ export function ModuleList({ modules, groups, selected, onToggle, variantSelecti
                   isLinkedGroup={group.linked}
                   variantIndex={variantSelections.get(mod.id) ?? 0}
                   onVariantChange={(index) => onVariantChange(mod.id, index)}
+                  isInstalled={installedPatches?.has(mod.id)}
                 />
               ))}
             </div>

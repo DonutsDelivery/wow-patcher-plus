@@ -127,6 +127,14 @@ export async function repairPatches(
   return invoke('repair_patches', { patchIds, onEvent });
 }
 
+export async function detectInstalledPatches(patchIds: string[]): Promise<string[]> {
+  return invoke('detect_installed_patches', { patchIds });
+}
+
+export async function uninstallPatches(patchIds: string[]): Promise<string[]> {
+  return invoke('uninstall_patches', { patchIds });
+}
+
 // Requirements check
 export interface RequirementsStatus {
   vanilla_helpers: boolean;

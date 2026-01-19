@@ -384,6 +384,67 @@ async fn repair_patches(
     manager.repair_patches(&ids, on_event).await.map_err(|e| e.to_string())
 }
 
+/// Detect which patches are already installed in the WoW Data folder
+#[tauri::command]
+async fn detect_installed_patches(
+    manager: State<'_, InstallManager>,
+    patch_ids: Vec<String>,
+) -> Result<Vec<String>, String> {
+    let wow_path = manager.get_wow_path()
+        .ok_or("WoW path not set")?;
+
+    let data_folder = wow_path.join("Data");
+    if !data_folder.exists() {
+        return Ok(Vec::new());
+    }
+
+    let ids: Vec<&str> = patch_ids.iter().map(|s| s.as_str()).collect();
+    let installed_paths = install::verifier::get_installed_patches(&ids, &data_folder).await;
+
+    // Extract just the patch IDs from the installed paths
+    let installed_ids: Vec<String> = installed_paths
+        .iter()
+        .filter_map(|path| {
+            path.file_stem()
+                .and_then(|s| s.to_str())
+                .and_then(|name| name.strip_prefix("Patch-"))
+                .map(|id| id.to_string())
+        })
+        .collect();
+
+    Ok(installed_ids)
+}
+
+/// Uninstall patches by removing MPQ files from the WoW Data folder
+#[tauri::command]
+async fn uninstall_patches(
+    manager: State<'_, InstallManager>,
+    patch_ids: Vec<String>,
+) -> Result<Vec<String>, String> {
+    let wow_path = manager.get_wow_path()
+        .ok_or("WoW path not set")?;
+
+    let data_folder = wow_path.join("Data");
+    if !data_folder.exists() {
+        return Err("Data folder not found".to_string());
+    }
+
+    let mut uninstalled = Vec::new();
+    for patch_id in &patch_ids {
+        match install::copier::uninstall_mpq(&data_folder, patch_id).await {
+            Ok(_) => uninstalled.push(patch_id.clone()),
+            Err(e) => log::error!("[Uninstall] Failed to uninstall {}: {:?}", patch_id, e),
+        }
+    }
+
+    // Clear WDB cache after uninstalling
+    if let Err(e) = manager.clear_wdb_folder().await {
+        log::warn!("[Uninstall] Failed to clear WDB: {:?}", e);
+    }
+
+    Ok(uninstalled)
+}
+
 /// Load saved settings on startup
 #[tauri::command]
 fn load_saved_wow_path(
@@ -725,6 +786,8 @@ pub fn run() {
             install_patches,
             verify_patches,
             repair_patches,
+            detect_installed_patches,
+            uninstall_patches,
             load_saved_wow_path,
             check_requirements,
             install_vanilla_helpers,
